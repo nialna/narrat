@@ -8,9 +8,17 @@ import { findDataHelper, setDataHelper } from './utils/data-helpers';
 import { getFile } from './utils/ajax';
 import { parseRenpyScript } from './renpy/renpy-parser';
 import { Config, SkillData } from './types/config';
+
 // define your typings for the store state
 
 
+const plugins = [];
+// checking process.env actually exists just for safety
+if (process && typeof process.env === 'object') {
+  if (process.env.NODE_ENV !== 'production') {
+    plugins.push(createLogger());
+  }
+}
 // define injection key
 export const key: InjectionKey<Store<State>> = Symbol()
 
@@ -116,7 +124,7 @@ export const store = createStore<State>({
       setDataHelper(state.machine.data, path, value);
     },
   },
-  plugins: [createLogger()],
+  plugins,
 })
 
 function findDataKey(state: State, path: string) {

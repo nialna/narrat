@@ -22,3 +22,8 @@ export function startApp(config: GameConfig) {
     });
   }
 }
+
+startApp({
+  charactersPath: 'data/characters.json',
+  configPath: 'data/config.json',
+});
