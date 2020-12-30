@@ -1,6 +1,6 @@
 {
   "name": "narrat",
-  "version": "0.0.0-alpha",
+  "version": "0.0.0-alpha-1",
   "description": "narrat narrative engine",
   "main": "lib/index.js",
   "module": "lib/index.esm.js",
@@ -10,7 +10,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "snowpack dev",
-    "build": "rollup -c"
+    "build": "NODE_ENV=production rollup -c"
   },
   "keywords": [
     "game"
@@ -34,6 +34,7 @@
     "postcss": "^8.2.1",
     "postcss-cli": "^8.3.1",
     "rollup": "^2.35.1",
+    "rollup-plugin-analyzer": "^4.0.0",
     "rollup-plugin-paths": "^0.0.4",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.0",

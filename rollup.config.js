@@ -7,6 +7,7 @@ import typescript from 'rollup-plugin-typescript2'
 import packageJson from "./package.json";
 import postcss from 'rollup-plugin-postcss';
 import paths from 'rollup-plugin-paths';
+import analyze from 'rollup-plugin-analyzer';
 
 export default {
   input: 'src/index.ts',
@@ -23,16 +24,17 @@ export default {
     },
   ],
   plugins: [
-    vuePlugin(),
-    peerDepsExternal(),
-    typescript(),
     resolve({
       extensions: ['.ts', '.js', '.vue', '.css'],
     }),
+    vuePlugin(),
+    postcss(),
+    peerDepsExternal(),
+    typescript(),
     commonjs(),
     paths({
       '@': './src/',
     }),
-    postcss(),
+    analyze(),
   ],
 };
