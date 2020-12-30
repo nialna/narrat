@@ -1,0 +1,28 @@
+{
+  "config": {
+    "imagesPath": "./img/characters/"
+  },
+  "characters": {
+    "game": {
+      "name": "",
+      "color": "white"
+    },
+    "player": {
+      "style": {
+        "color": "orange"
+      },
+      "name": "You"
+    },
+    "cat": {
+      "sprites": {
+        "default": "cat_idle.jpg",
+        "idle": "cat_idle.jpg",
+        "feral": "cat_idle.jpg"
+      },
+      "style": {
+        "color": "red"
+      },
+      "name": "cat"
+    }
+  }
+}

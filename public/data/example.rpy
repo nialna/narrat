@@ -1,12 +1,3 @@
-# 🚀 Narrat
-
-A narrative game engine for text-based games. Inspired by renpy syntax, but built to be customisable, extendable and web-focused.
-
-Game dialogue info is written in files with a similar syntax to Renpy (.rpy files). Those files get loaded by the game engine which plays through them.
-
-Example game code:
-
-```
 main:
     // This is a comment
     set quests.someQuest 2 // You can set any values in the data part of the state
@@ -43,24 +34,3 @@ main:
 testLabel:
     "Hello, I'm a different label"
 // Different labels can also be in different files
-```
-
-## Install
-
-Make sure you have [node.js](https://nodejs.org/en/) installed (Made using `15.5.0`, LTS probably also works, not tested). You can use [nvm](https://github.com/nvm-sh/nvm) to simplify node installation (not on Windows).
-
-Then create a webapp however you want and install narrat:
-
-`npm install narrat`
-
-Copy the example `characters.json` and `config.json` from the `public/data` folders somewhere in your app, and have an `index.html` file with an `#app` div including your javascript (you can copy `public/index.html`).
-
-Then in your javascript code:
-
-```
-import { startApp } from 'narrat';
-startApp({
-  charactersPath: 'data/characters.json',
-  configPath: 'data/config.json',
-});
-```

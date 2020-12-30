@@ -1,0 +1,12 @@
+{
+  "gameTitle": "Lovely Lady RPG",
+  "skills": {
+    "testSkill": {
+      "name": "Test Skill",
+      "description": "A test skill."
+    }
+  },
+  "games": {
+    "test": ["data/example.rpy"]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "declarationDir": "lib",
+    "sourceMap": true,
+    "baseUrl": "./",
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "esnext",
+    "declaration": true,
+    "importHelpers": true,
+    "allowJs": true,
+    "strict": true,
+    "noImplicitThis": true,
+    "jsx": "preserve",
+    "experimentalDecorators": true,
+    "paths": {
+    "@/*": [
+        "src/*"
+      ]
+    },
+    "typeRoots": [
+      "types/"
+    ]
+  },
+  "include": ["src/**/*.ts", "src/**/*.vue"],
+  "exclude": [
+    "node_modules"
+  ]
+}
