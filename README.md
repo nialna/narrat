@@ -2,9 +2,83 @@
 
 A narrative game engine for text-based games. Inspired by renpy syntax, but built to be customisable, extendable and web-focused.
 
+You can [try a little demo](https://narrat-demo.imfast.io)
+
 Game dialogue info is written in files with a similar syntax to Renpy (.rpy files). Those files get loaded by the game engine which plays through them.
 
-Example game code:
+
+## Usage
+
+Make sure you have [node.js](https://nodejs.org/en/) installed (Made using `15.5.0`, LTS probably also works, not tested). You can use [nvm](https://github.com/nvm-sh/nvm) to simplify node installation (not on Windows).
+
+Narrat is a JavaScript library you can add to a web project.
+
+One simple way to set it up is to use the [Narrat Template App](https://github.com/nialna/narrat-template).
+
+Otherwise, use your preferred way of setting up a JS web project, and add `narrat` as a library
+
+## Install on a project
+
+`npm install narrat`
+
+For narrat to run, it needs two pieces of data:
+
+* The `config` file which contains the path of your script files and other info
+* The `characters` file which contains the list of characters in the game
+
+Copy the example `characters.json` and `config.json` from the `public/data` folders somewhere in your app, and have an `#app` div in your page's html including your javascript (you can copy `public/index.html`)
+.
+
+Then in your javascript code to launch narrat, use:
+
+```
+import { startApp } from 'narrat';
+// Call `startApp` to run the game, passing the path to your config file and characters file.
+startApp({
+  charactersPath: 'data/characters.json', // Replace with whatever path you have
+  configPath: 'data/config.json',
+});
+```
+
+## Customising your game
+
+#### config.json
+
+The config file contains basic info about your game. In it you can add new skills and change their name.
+
+This is also where the scripts used in your game are listed. By default it only uses `data/example.rpy` but you can add more scripts to the list and they will all get loaded.
+
+#### characters.json
+
+The `characters.json` file contains the config for all characters that can speak in the game. They should all at least have a name value.
+
+You can change the color their name appears as by changing the `color` value in the `style` property of the character (you can use any CSS valid color).
+
+If you want to customise even more, you can put a CSS properties object in the following properties:
+
+* `stylesboxCss`: Will apply CSS to the container of a dialogue line for this character
+* `style.nameCss`: Will apply CSS to the text with the title of the character
+* `style.textCss`: Will apply CSS to the actual dialogue text for the character.
+
+Example:
+```
+    "player": {
+      "style": {
+        "color": "orange",
+        "textCss": {
+            "color": "blue"
+        },
+        "boxCss": {
+            "backgroundColor": "white"
+        }
+      },
+      "name": "You"
+    },
+```
+
+## Writing code
+
+Look at the example code to see syntax
 
 ```
 main:
@@ -43,24 +117,4 @@ main:
 testLabel:
     "Hello, I'm a different label"
 // Different labels can also be in different files
-```
-
-## Install
-
-Make sure you have [node.js](https://nodejs.org/en/) installed (Made using `15.5.0`, LTS probably also works, not tested). You can use [nvm](https://github.com/nvm-sh/nvm) to simplify node installation (not on Windows).
-
-Then create a webapp however you want and install narrat:
-
-`npm install narrat`
-
-Copy the example `characters.json` and `config.json` from the `public/data` folders somewhere in your app, and have an `index.html` file with an `#app` div including your javascript (you can copy `public/index.html`).
-
-Then in your javascript code:
-
-```
-import { startApp } from 'narrat';
-startApp({
-  charactersPath: 'data/characters.json',
-  configPath: 'data/config.json',
-});
 ```

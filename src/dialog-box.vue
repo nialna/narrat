@@ -57,7 +57,7 @@ export default defineComponent({
     },
     titleStyle(): any {
       const style = getCharacterStyle(this.options!.styleId);
-      const result = { color: style.color, ...style };
+      const result = { color: style.color, ...style.nameCss };
       return result;
     },
     textStyle(): any {
