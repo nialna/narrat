@@ -24,6 +24,7 @@ export default {
     },
   ],
   plugins: [
+    peerDepsExternal(),
     resolve({
       extensions: ['.ts', '.js', '.vue', '.css'],
     }),

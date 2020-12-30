@@ -1,5 +1,5 @@
 import 'es6-promise/auto'
-import './sass/main.css';
+import './/sass/main.css';
 import { createApp } from 'vue';
 import App from './app.vue';
 import { store, key } from './store';
