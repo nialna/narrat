@@ -78,7 +78,19 @@ Example:
 
 ## Writing code
 
-Look at the example code to see syntax
+Narrat script is split into labels, which are the first level of indentation you see in the code (labels `main:` and `testLabel:` in the example below). Those labels are standalone pieces of script which can be played at anytime. `main` is the label that gets launched when the game starts.
+
+The syntax is based on indentation: An indent level is 4 spaces, and entering a new indentation level means entering a new block in the code.
+
+This syntax is largely inspired by renpy syntax.
+
+Note: The parser for the code is very new and likely to break if pushed too much.
+
+### Adding your scripts to your game
+
+To add new scripts to your game, add their path to the list in your `config.json` file. Make sure one of your files has a `main` label, as that's where the game will start.
+
+Look at the example code to see syntax.
 
 ```
 main:
@@ -118,3 +130,8 @@ testLabel:
     "Hello, I'm a different label"
 // Different labels can also be in different files
 ```
+
+## Things missing
+
+* Saving
+* Advanced visual/layout customisation
