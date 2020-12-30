@@ -23,6 +23,7 @@ export default {
     },
   ],
   plugins: [
+    vuePlugin(),
     peerDepsExternal(),
     typescript(),
     resolve({
@@ -32,8 +33,6 @@ export default {
     paths({
       '@': './src/',
     }),
-    // typescriptPaths(),
-    vuePlugin(),
     postcss(),
   ],
 };

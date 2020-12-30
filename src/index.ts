@@ -1,5 +1,5 @@
 import 'es6-promise/auto'
-import '@/sass/main.css';
+import './sass/main.css';
 import { createApp } from 'vue';
 import App from './app.vue';
 import { store, key } from './store';
@@ -22,8 +22,3 @@ export function startApp(config: GameConfig) {
     });
   }
 }
-
-startApp({
-  charactersPath: 'data/characters.json',
-  configPath: 'data/config.json',
-});
