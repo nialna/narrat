@@ -55,14 +55,13 @@ export default defineComponent({
   props: {
     config: Object as PropType<GameConfig>,
   },
-  mounted () {
-    getFile('data/characters.json')
-    .then((file) => setCharactersConfig(JSON.parse(file)))
-    .then(() => getFile('data/config.json'))
-    .then((file) => setConfig(JSON.parse(file)))
-    .then(() => {
-      this.gameLoaded = true;
-    });
+  async mounted () {
+    const charsFile = await getFile('data/characters.json')
+    await setCharactersConfig(JSON.parse(charsFile));
+    const configFile = await getFile('data/config.json');
+    await setConfig(JSON.parse(configFile))
+    await this.startMachine();
+    this.gameLoaded = true;
   },
 
   computed: {
@@ -94,12 +93,10 @@ export default defineComponent({
       return this.$store.dispatch('startMachine', { scriptPaths, config: getConfig() })
     },
     async startGame() {
-      await this.startMachine();
       await this.$store.dispatch('runLine');
       this.dialogPlaying = true;
     },
     async loadGame() {
-      await this.startMachine();
       await this.$store.dispatch('loadGame', this.saveFile);
       this.dialogPlaying = true;
     },
