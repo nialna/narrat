@@ -39,14 +39,21 @@ export function runCondition(state: State, condition: string): boolean {
 }
 
 function conditionFunction(state: State, condition: string) {
-  const data = state.machine.data;
-  const skills = state.skills;
-  const skillCheck = (checkType: string, skill: string, value: number) => {
-    return runSkillCheck(state, {
-      skill,
-      value,
-      checkType,
-    });
+  const context = {
+    data: state.machine.data,
+    skills: state.skills,
+    skillCheck: (checkType: string, skill: string, value: number) => {
+      return runSkillCheck(state, {
+        skill,
+        value,
+        checkType,
+      });
+    },
   };
-  return eval(`(${condition})`);
+  return evalInContext(`(${condition})`, context) as boolean;
+}
+
+function evalInContext(script: string, context: any) {
+  //# Return the results of the in-line anonymous function we .call with the passed context
+  return function() { return eval(script); }.call(context);
 }

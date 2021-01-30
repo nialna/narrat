@@ -1,17 +1,20 @@
 
 const INDENT_SIZE = 4;
 
-export function parseRenpyScript(code: string): Parser.ParsedScript {
-  const lines = findRenpyLines(code);
+export interface ParserContext {
+  fileName: string;
+}
+export function parseRenpyScript(code: string, ctx: ParserContext): Parser.ParsedScript {
+  const lines = findRenpyLines(ctx, code);
   const script: Parser.ParsedScript = {}
   for (const line of lines) {
     const labelName = line.code.replace(':', '');
-    script[labelName] = processRenpyCommands(line.branch!);
+    script[labelName] = processRenpyCommands(ctx, line.branch!);
   }
   return script;
 }
 
-function processRenpyCommands(lines: Parser.Line[]): Parser.Branch {
+function processRenpyCommands(ctx: ParserContext, lines: Parser.Line[]): Parser.Branch {
   let currentLine = 0;
   const branch: Parser.Branch = [];
   while (currentLine < lines.length) {
@@ -31,12 +34,11 @@ function processRenpyCommands(lines: Parser.Line[]): Parser.Branch {
         break;
       case 'choice':
         if (!line.branch! || line.branch!.length < 2) {
-          error(`Choice menu needs to have at least one option`, currentLine);
+          error(ctx, line.line, `Choice menu needs to have at least one option`);
         }
         const prompt = line.branch![0];
         const choices = line.branch!.slice(1);
         const prompts: Parser.ChoicePrompt[] = choices.map(choice => {
-          console.log(`Choice: `, choice);
           let choiceText = choice.operator;
           let condition: string | undefined;
           let skillCheck: Parser.SkillCheckOptions | undefined;
@@ -46,11 +48,11 @@ function processRenpyCommands(lines: Parser.Line[]): Parser.Branch {
             const failureBranch = choice.branch![1];
             const success = {
               text: successBranch.args[0],
-              branch: processRenpyCommands(successBranch.branch!),
+              branch: processRenpyCommands(ctx, successBranch.branch!),
             };
             let failedBranch: Parser.Branch | undefined;
             if (failureBranch.branch) {
-              failedBranch = processRenpyCommands(failureBranch.branch!);
+              failedBranch = processRenpyCommands(ctx, failureBranch.branch!);
             }
             const failure = {
               text: failureBranch.args[0],
@@ -71,11 +73,11 @@ function processRenpyCommands(lines: Parser.Line[]): Parser.Branch {
             choice: choiceText,
             condition,
             skillCheck,
-            branch: processRenpyCommands(choice.branch!),
+            branch: processRenpyCommands(ctx, choice.branch!),
           };
         });
         command.options = {
-          prompt: processRenpyCommands([prompt])[0],
+          prompt: processRenpyCommands(ctx, [prompt])[0],
           choices: prompts,
         };
         command.commandType = 'choice';
@@ -94,12 +96,12 @@ function processRenpyCommands(lines: Parser.Line[]): Parser.Branch {
         let failure: Parser.Branch | undefined;
         const nextLine = getLine(lines, currentLine + 1);
         if (nextLine && nextLine.operator === 'else') {
-          failure = processRenpyCommands(nextLine.branch!);
+          failure = processRenpyCommands(ctx, nextLine.branch!);
           currentLine++;
         }
         command.options = {
           condition: args[0],
-          success: processRenpyCommands(line.branch!),
+          success: processRenpyCommands(ctx, line.branch!),
           failure,
         };
         currentLine++;
@@ -175,19 +177,19 @@ function parseCodeLine(codeToProcess: string) {
 
 
 
-function findRenpyLines(data: string): Parser.Line[] {
+function findRenpyLines(ctx: ParserContext, data: string): Parser.Line[] {
   const code = data.split('\n').map(line => {
     const commentIndex = line.search(/ *\/\//g);
     if (commentIndex !== -1) {
       return line.substr(0, commentIndex);
     }
     return line;
-  }).filter(a => a.search(/^\s*$/) === -1);
-  const lines = findRenpyBranches(code, 0, 0);
+  })
+  const lines = findRenpyBranches(ctx, code, 0, 0);
   return lines.lines;
 };
 
-function findRenpyBranches(code: string[], startLine: number, indentLevel: number) {
+function findRenpyBranches(ctx: ParserContext, code: string[], startLine: number, indentLevel: number) {
   let stillInBranch = true;
 let currentLine = startLine;
   const lines: Parser.Line[] = [];
@@ -196,29 +198,33 @@ let currentLine = startLine;
       break;
     }
     let lineText = code[currentLine];
-    const lineIndent = getIndentLevel(lineText);
-    lineText = lineText.substr(lineIndent * 4);
-    validateIndent(lineIndent, currentLine);
-    if (lineIndent < indentLevel) {
-      stillInBranch = false;
-    } else if (lineIndent > indentLevel) {
-      if (lines.length === 0 || lineIndent - indentLevel !== 1) {
-        error(`Wrong double indentation`, currentLine);
-      }
-      const branchLines = findRenpyBranches(code, currentLine, lineIndent);
-      lines[lines.length - 1].branch = branchLines.lines;
-      currentLine = branchLines.endLine;
-    } else {
-      const words = parseCodeLine(lineText);
-      const line: Parser.Line = {
-        code: lineText,
-        indentation: lineIndent,
-        line: currentLine,
-        operator: words[0],
-        args: words.slice(1),
-      };
-      lines.push(line);
+    if (lineText.search(/^\s*$/) !== -1) {
       currentLine++;
+    } else {
+      const lineIndent = getIndentLevel(lineText);
+      lineText = lineText.substr(lineIndent * 4);
+      validateIndent(ctx, lineIndent, currentLine);
+      if (lineIndent < indentLevel) {
+        stillInBranch = false;
+      } else if (lineIndent > indentLevel) {
+        if (lines.length === 0 || lineIndent - indentLevel !== 1) {
+          error(ctx, currentLine, `Wrong double indentation`);
+        }
+        const branchLines = findRenpyBranches(ctx, code, currentLine, lineIndent);
+        lines[lines.length - 1].branch = branchLines.lines;
+        currentLine = branchLines.endLine;
+      } else {
+        const words = parseCodeLine(lineText);
+        const line: Parser.Line = {
+          code: lineText,
+          indentation: lineIndent,
+          line: currentLine,
+          operator: words[0],
+          args: words.slice(1),
+        };
+        lines.push(line);
+        currentLine++;
+      }
     }
   }
   return {
@@ -228,9 +234,9 @@ let currentLine = startLine;
 }
 
 
-function validateIndent(indentLevel: number, currentIndex: number) {
+function validateIndent(ctx: ParserContext, indentLevel: number, currentIndex: number) {
   if (indentLevel % 1 !== 0) {
-    error(`Indentation level of ${indentLevel} incorrect`, currentIndex);
+    error(ctx, currentIndex,`Indentation level of ${indentLevel} incorrect`);
   }
 }
 
@@ -238,6 +244,6 @@ function getIndentLevel(line: string) {
   return line.search(/[^ ]/) / INDENT_SIZE;
 }
 
-function error(text: string, line: number) {
-  console.error(`Error line °${line}: ${text}`);
+function error(ctx: ParserContext, line: number, text: string) {
+  console.error(`Error in ${ctx.fileName}:${line}: ${text}`);
 }

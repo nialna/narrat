@@ -63,8 +63,11 @@ export const store = createStore<State>({
       const files = await Promise.all(filePromises);
       const start = Date.now();
       let scripts: Parser.ParsedScript = {};
-      for (const file of files) {
-        scripts = { ...scripts, ...parseRenpyScript(file) };
+      for (const index in files) {
+        const file = files[index]
+        scripts = { ...scripts, ...parseRenpyScript(file, {
+          fileName: scriptPaths[index],
+        }) };
       }
       const end = Date.now();
       console.log(`script parsed in ${end - start} ms`);

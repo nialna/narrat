@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import Modal from '@/components/utils/modal.vue';
+import Modal from '../utils/modal.vue';
 
 export default defineComponent({
   components: {

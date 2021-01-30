@@ -26,15 +26,15 @@
 import { defineComponent, PropType } from 'vue'
 import DialogBox from './dialog-box.vue';
 import DialogPicture from './components/dialog-picture.vue';
-import DebugMenu from '@/components/debug/debug-menu.vue';
+import DebugMenu from './components/debug/debug-menu.vue';
 import { getFile } from './utils/ajax';
 import { getCharacterInfo, getCharacterPictureUrl, setCharactersConfig } from '@/utils/characters';
 import { DialogKey } from './types/vuex';
-import { DialogBoxParameters } from '@/types/dialog-box-types';
-import { processText } from '@/utils/string-helpers';
-import { getConfig, setConfig } from '@/config';
+import { DialogBoxParameters } from './types/dialog-box-types';
+import { processText } from './utils/string-helpers';
+import { getConfig, setConfig } from './config';
 import { GameConfig } from './types/app-types';
-import { SAVE_FILE } from '@/constants';
+import { SAVE_FILE } from './constants';
 console.log('hello app');
 
 export default defineComponent({

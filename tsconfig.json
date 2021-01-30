@@ -11,7 +11,7 @@
     "declaration": true,
     "importHelpers": true,
     "allowJs": true,
-    "strict": true,
+    "strict": false,
     "noImplicitThis": true,
     "jsx": "preserve",
     "experimentalDecorators": true,
