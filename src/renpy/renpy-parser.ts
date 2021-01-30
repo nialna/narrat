@@ -1,7 +1,17 @@
 
 const INDENT_SIZE = 4;
 
-export function processRenpyCommands(lines: Parser.Line[]): Parser.Branch {
+export function parseRenpyScript(code: string): Parser.ParsedScript {
+  const lines = findRenpyLines(code);
+  const script: Parser.ParsedScript = {}
+  for (const line of lines) {
+    const labelName = line.code.replace(':', '');
+    script[labelName] = processRenpyCommands(line.branch!);
+  }
+  return script;
+}
+
+function processRenpyCommands(lines: Parser.Line[]): Parser.Branch {
   let currentLine = 0;
   const branch: Parser.Branch = [];
   while (currentLine < lines.length) {
@@ -106,11 +116,11 @@ export function processRenpyCommands(lines: Parser.Line[]): Parser.Branch {
   return branch;
 }
 
-export function getLine(lines: Parser.Line[], index: number) {
+function getLine(lines: Parser.Line[], index: number) {
   if (index < lines.length) return lines[index];
 }
 
-export function parseValue(value: string) {
+function parseValue(value: string) {
   if (value === 'true') {
     return true;
   } else if (value === 'false') {
@@ -124,7 +134,7 @@ export function parseValue(value: string) {
   }
 }
 
-export function parseCodeLine(codeToProcess: string) {
+function parseCodeLine(codeToProcess: string) {
   if (codeToProcess.charAt(codeToProcess.length - 1) === ':') {
     codeToProcess = codeToProcess.substr(0, codeToProcess.length - 1);
   }
@@ -163,17 +173,9 @@ export function parseCodeLine(codeToProcess: string) {
   return words;
 }
 
-export function parseRenpyScript(code: string): Parser.ParsedScript {
-  const lines = findRenpyLines(code);
-  const script: Parser.ParsedScript = {}
-  for (const line of lines) {
-    const labelName = line.code.replace(':', '');
-    script[labelName] = processRenpyCommands(line.branch!);
-  }
-  return script;
-}
 
-export function findRenpyLines(data: string): Parser.Line[] {
+
+function findRenpyLines(data: string): Parser.Line[] {
   const code = data.split('\n').map(line => {
     const commentIndex = line.search(/ *\/\//g);
     if (commentIndex !== -1) {
@@ -185,7 +187,7 @@ export function findRenpyLines(data: string): Parser.Line[] {
   return lines.lines;
 };
 
-export function findRenpyBranches(code: string[], startLine: number, indentLevel: number) {
+function findRenpyBranches(code: string[], startLine: number, indentLevel: number) {
   let stillInBranch = true;
 let currentLine = startLine;
   const lines: Parser.Line[] = [];
@@ -226,16 +228,16 @@ let currentLine = startLine;
 }
 
 
-export function validateIndent(indentLevel: number, currentIndex: number) {
+function validateIndent(indentLevel: number, currentIndex: number) {
   if (indentLevel % 1 !== 0) {
     error(`Indentation level of ${indentLevel} incorrect`, currentIndex);
   }
 }
 
-export function getIndentLevel(line: string) {
+function getIndentLevel(line: string) {
   return line.search(/[^ ]/) / INDENT_SIZE;
 }
 
-export function error(text: string, line: number) {
+function error(text: string, line: number) {
   console.error(`Error line °${line}: ${text}`);
 }

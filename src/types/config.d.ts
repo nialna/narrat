@@ -3,9 +3,7 @@ export interface Config {
   skills: {
     [key: string]: SkillData;
   };
-  games: {
-    [key: string]: string[];
-  };
+  scripts: string[];
 }
 
 export interface SkillData {

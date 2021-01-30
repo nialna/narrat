@@ -14,10 +14,11 @@ import { Config, SkillData } from './types/config';
 
 const plugins = [];
 // checking process.env actually exists just for safety
-if (process && typeof process.env === 'object') {
-  if (process.env.NODE_ENV !== 'production') {
-    plugins.push(createLogger());
-  }
+if (typeof process !== 'undefined' && typeof process.env === 'object'
+  && process.env.NODE_ENV === 'production') {
+    // Do production stuff
+} else {
+  plugins.push(createLogger());
 }
 // define injection key
 export const key: InjectionKey<Store<State>> = Symbol()
@@ -66,6 +67,17 @@ export const store = createStore<State>({
       console.log(`script parsed in ${end - start} ms`);
       commit('setScript', scripts);
       commit('setupSkills', payload.config.skills);
+      this.dispatch('runLine');
+    },
+    runLabel ({ state }, label) {
+      const branch = state.machine.script[label];
+      if (!branch) {
+        console.error(`Label ${branch} doesn't exist`);
+      }
+      state.machine.stack = [{
+        currentIndex: 0,
+        branch,
+      }];
       this.dispatch('runLine');
     },
     runLine (context) {
