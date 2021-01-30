@@ -49,9 +49,11 @@ export default defineComponent({
     },
     dialogBoxStyle (): any {
       const style = getCharacterStyle(this.options!.styleId);
-      let css: any = {};
+      let css: any = {
+        opacity: this.options!.old ? '0.5' : '1',
+      };
       if (!this.options!.title) {
-        css = { marginTop: '-20px' };
+        css.marginTop = '-20px';
       }
       return { ...style.boxCss, ...css };
     },

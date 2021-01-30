@@ -8,6 +8,8 @@ import { findDataHelper, setDataHelper } from './utils/data-helpers';
 import { getFile } from './utils/ajax';
 import { parseRenpyScript } from './renpy/renpy-parser';
 import { Config, SkillData } from './types/config';
+import { GameSave } from './types/game-save';
+import { SAVE_FILE } from './constants';
 
 // define your typings for the store state
 
@@ -36,6 +38,7 @@ export const store = createStore<State>({
     ready: false,
     count: 0,
     skills: {},
+    lastLabel: 'main',
   },
   getters: {
     machineHead (state): MachineStack {
@@ -67,21 +70,22 @@ export const store = createStore<State>({
       console.log(`script parsed in ${end - start} ms`);
       commit('setScript', scripts);
       commit('setupSkills', payload.config.skills);
-      this.dispatch('runLine');
     },
-    runLabel ({ state }, label) {
+    runLabel ({ state, commit }, label) {
       const branch = state.machine.script[label];
       if (!branch) {
         console.error(`Label ${branch} doesn't exist`);
       }
+      commit('setLastLabel', label);
       state.machine.stack = [{
         currentIndex: 0,
         branch,
       }];
       this.dispatch('runLine');
     },
-    runLine (context) {
-      return runLine(context);
+    async runLine (context) {
+      await this.dispatch('saveGame')
+      await runLine(context);
     },
     nextLine (context) {
       return nextLine(context);
@@ -89,14 +93,38 @@ export const store = createStore<State>({
     playerAnswered(context, index) {
       return playerAnswered(context, index);
     },
+    saveGame({ state }) {
+      const save: GameSave = {
+        data: state.machine.data,
+        skills: state.skills,
+        dialog: state.dialog,
+        lastLabel: state.lastLabel,
+      };
+      localStorage.setItem(SAVE_FILE, JSON.stringify(save));
+    },
+    loadGame({ commit, dispatch }, saveFile: string) {
+      if (saveFile) {
+        const save: GameSave = JSON.parse(saveFile);
+        commit('setLoadedData', save);
+        dispatch('runLabel', save.lastLabel);
+      }
+    }
   },
   mutations: {
+    setLoadedData (state, save: GameSave) {
+      state.machine.data = save.data;
+      state.skills = save.skills;
+      state.dialog = save.dialog;
+    },
     reset (state) {
       state.ready = false;
       state.machine.stack = [];
       state.machine.script = {};
       state.machine.data = {};
       state.dialog = [];
+    },
+    setLastLabel (state, label) {
+      state.lastLabel = label;
     },
     setScript (state, script) {
       state.machine.script = script;

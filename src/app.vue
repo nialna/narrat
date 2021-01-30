@@ -11,8 +11,9 @@
         </transition-group>
       </div>
     </div>
-    <div v-else-if="gameLoaded">
+    <div v-else-if="gameLoaded" class="flex flex-col">
       <button class="button" @click="startGame">Start Game</button>
+      <button class="button" @click="loadGame" v-if="saveFile">Continue Game</button>
     </div>
     <div v-else>
       <p>Loading... {{ config.charactersPath }}</p>
@@ -33,7 +34,7 @@ import { DialogBoxParameters } from '@/types/dialog-box-types';
 import { processText } from '@/utils/string-helpers';
 import { getConfig, setConfig } from '@/config';
 import { GameConfig } from './types/app-types';
-
+import { SAVE_FILE } from '@/constants';
 console.log('hello app');
 
 export default defineComponent({
@@ -81,15 +82,26 @@ export default defineComponent({
         return getCharacterPictureUrl(this.lastDialog.speaker, this.lastDialog.pose);
       }
     },
+    saveFile(): string | null {
+      const saveString: string | null = localStorage.getItem(SAVE_FILE);
+      return saveString;
+    }
   },
 
   methods: {
-    startGame() {
+    async startMachine() {
       const scriptPaths = getConfig().scripts;
-      this.$store.dispatch('startMachine', { scriptPaths, config: getConfig() })
-      .then(() => {
-        this.dialogPlaying = true;
-      });
+      return this.$store.dispatch('startMachine', { scriptPaths, config: getConfig() })
+    },
+    async startGame() {
+      await this.startMachine();
+      await this.$store.dispatch('runLine');
+      this.dialogPlaying = true;
+    },
+    async loadGame() {
+      await this.startMachine();
+      await this.$store.dispatch('loadGame', this.saveFile);
+      this.dialogPlaying = true;
     },
     scriptSelected(event: any) {
       const gameName = event.target.value;
@@ -123,6 +135,7 @@ export default defineComponent({
         text: processText(this.$store, dialogKey.text),
         styleId: dialogKey.speaker,
         choices: dialogKey.choices,
+        old: (index < this.dialog.length - 1),
       };
     },
   },

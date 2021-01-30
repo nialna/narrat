@@ -11,6 +11,7 @@
           <option selected disabled>Jump to a label</option>
           <option v-for="label in labels" :value="label" :key="label">{{ label }}</option>
         </select>
+        <button @click="save">Save Game</button>
       </template>
     </modal>
   </div>
@@ -41,13 +42,16 @@ export default defineComponent({
     },
     open() {
       this.showDebug = true;
+    },
+    save() {
+      this.$store.dispatch('saveGame');
     }
   },
 
   computed: {
     labels(): string[] {
       const scripts = this.$store.state.machine.script;
-      return Object.keys(scripts);
+      return Object.keys(scripts).sort();
     }
   }
 })

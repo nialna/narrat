@@ -24,6 +24,14 @@ export interface SkillState {
   level: number;
 }
 
+export interface SkillsState {
+  [key: string]: SkillState;
+}
+
+export interface DataState {
+  [key: string]: any;
+}
+
 declare module '@vue/runtime-core' {
 
   // declare your own store states
@@ -31,17 +39,15 @@ declare module '@vue/runtime-core' {
     machine: {
       stack: MachineStack[];
       script: Parser.ParsedScript;
-      data: {
-        [key: string]: any;
-      };
+      data: DataState;
     };
     dialog: DialogKey[];
     count: number;
     ready: boolean;
-    skills: {
-      [key: string]: SkillState;
-    };
+    skills: SkillsState;
+    lastLabel: string;
   }
+  
 
   // provide typings for `this.$store`
   interface ComponentCustomProperties {
