@@ -2,7 +2,7 @@
 
 A narrative game engine for text-based games. Inspired by renpy syntax, but built to be customisable, extendable and web-focused.
 
-You can [try a little demo](https://narrat-demo.imfast.io)
+You can [try a little demo](https://blog.lianapigeot.com/narrat-demo/). It contains a built version of the [narrat game template](https://github.com/nialna/narrat-template).
 
 Game dialogue info is written in files with a similar syntax to Renpy (.rpy files). Those files get loaded by the game engine which plays through them.
 
