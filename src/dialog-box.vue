@@ -72,8 +72,8 @@ export default defineComponent({
       }
     },
     canInteract(): boolean {
-      return this.active && !this.passed;
-    }
+      return this.active && !this.passed && this.options.interactive;
+    },
   },
 
   methods: {

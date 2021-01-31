@@ -14,6 +14,7 @@ export interface DialogKey {
   text: string;
   pose?: string;
   choices?: DialogChoice[];
+  interactive: boolean;
 }
 
 export interface DialogChoice {

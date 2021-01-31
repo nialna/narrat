@@ -30,6 +30,7 @@ export async function runCommand(context: ActionContext<State, State>,
         speaker: 'game',
         text: (cmd.options as Parser.TextOptions).text,
         choices,
+        interactive: true,
       });
       break;
     case 'set':
@@ -55,6 +56,7 @@ export async function runCommand(context: ActionContext<State, State>,
         pose: cmd.args[1],
         text: cmd.args[2],
         choices,
+        interactive: true,
       });
       break;
     case 'choice':
@@ -93,6 +95,7 @@ export async function playerAnswered (context: ActionContext<State, State>, choi
       const dialog: DialogKey = {
         speaker: 'player',
         text: playerText,
+        interactive: true,
       };
       commit('addDialog', { dialog });
       if (newBranch) {

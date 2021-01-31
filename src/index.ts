@@ -11,6 +11,7 @@ export interface AppOptions {
 }
 
 export function startApp(config: GameConfig, options: AppOptions) {
+  console.log('[VI]{version} - {date}[/VI]');
   const app = createApp(App, {
     config,
   });

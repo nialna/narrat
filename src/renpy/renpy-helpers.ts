@@ -1,3 +1,5 @@
+import { getConfig } from '@/config';
+import { DialogKey } from '@/types/vuex';
 import { getSkillCheckState } from '@/utils/skillchecks';
 import { State } from 'vue';
 import { ActionContext } from 'vuex';
@@ -19,11 +21,15 @@ export function runSkillCheck(ctx: ActionContext<State, State>, params: SkillChe
   const { state } = ctx;
   let roll = Math.floor(Math.random() * 100);
   roll += state.skills[params.skill].level * 10;
+  const config = getConfig();
+  const skill = config.skills[params.skill];
   if (roll >= params.value) {
     ctx.commit('passSkillCheck', params.id);
+    writeText(ctx, `[${skill.name} - Success]`);
     return true;
   }
   ctx.commit('failSkillCheck', params.id);
+  writeText(ctx, `[${skill.name} - Failure]`);
   return false;
 }
 export function runConditionCommand(ctx: ActionContext<State, State>, command: Parser.Command): Parser.Branch | undefined {
@@ -39,6 +45,16 @@ export function runConditionCommand(ctx: ActionContext<State, State>, command: P
   }
 }
 
+export function writeText(ctx: ActionContext<State, State>, text: string) {
+  const dialog: DialogKey = {
+    speaker: 'game',
+    text,
+    interactive: false,
+  };
+  ctx.commit('addDialog', {
+    dialog,
+  });
+}
 export function runCondition(ctx: ActionContext<State, State>, condition: string): boolean {
   return conditionFunction(ctx, condition);
 }

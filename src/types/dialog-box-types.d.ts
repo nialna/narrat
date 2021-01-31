@@ -6,4 +6,5 @@ export interface DialogBoxParameters {
   styleId?: string;
   choices?: DialogChoice[];
   old: boolean;
+  interactive: boolean;
 }

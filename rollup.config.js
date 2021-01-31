@@ -8,6 +8,7 @@ import packageJson from "./package.json";
 import postcss from 'rollup-plugin-postcss';
 import paths from 'rollup-plugin-paths';
 import analyze from 'rollup-plugin-analyzer';
+import versionInjector from 'rollup-plugin-version-injector';
 
 export default {
   input: 'src/index.ts',
@@ -32,6 +33,7 @@ export default {
     }),
     vuePlugin(),
     postcss(),
+    versionInjector(),
     peerDepsExternal(),
     typescript(),
     commonjs(),

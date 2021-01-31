@@ -133,6 +133,7 @@ export default defineComponent({
         styleId: dialogKey.speaker,
         choices: dialogKey.choices,
         old: (index < this.dialog.length - 1),
+        interactive: dialogKey.interactive,
       };
     },
   },
