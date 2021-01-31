@@ -11,7 +11,7 @@ export interface AppOptions {
 }
 
 export function startApp(config: GameConfig, options: AppOptions) {
-  console.log('[VI]{version} - {date}[/VI]');
+  console.log('%c Narrat game engine – [VI]{version} - {date}[/VI]', 'background: #222; color: #bada55');
   const app = createApp(App, {
     config,
   });
