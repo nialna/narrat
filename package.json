@@ -12,7 +12,7 @@
     "start": "snowpack dev",
     "version": "npm run build",
     "build": "NODE_ENV=production rollup -c",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags && rm -rf lib/"
   },
   "keywords": [
     "game"
