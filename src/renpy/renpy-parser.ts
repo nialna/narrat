@@ -102,7 +102,7 @@ function parseChoiceOption(ctx: ParserContext, choice: Parser.Line, index: numbe
       branch: failedBranch,
     };
     skillCheck = {
-      checkFunction: choice.args[0],
+      id: choice.args[0],
       skill: choice.args[1],
       value: choice.args[2],
       success,

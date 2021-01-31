@@ -5,7 +5,7 @@
       <span class="dialog-text dialog-separator" :style="textStyle" v-html="preText"></span>
       <span class="dialog-text" :style="textStyle">{{ options.text }}</span>
       <div class="dialog-choices" v-if="canInteract && choices">
-        <p v-for="(choice, index) in choices" :key="index"
+        <p v-for="(choice, index) in choices" :key="index" :style="dialogStyle(choice)"
         v-on:click="chooseOption(choice)" class="dialog-choice">
           {{index + 1}}. –&nbsp; {{ choice.choice }}
         </p>
@@ -67,7 +67,7 @@ export default defineComponent({
       return style.textCss;
     },
     choices (): DialogChoice[] | undefined {
-      if (this.options!.choices) {
+    if (this.options!.choices) {
         return this.options!.choices;
       }
     },
@@ -80,6 +80,14 @@ export default defineComponent({
     chooseOption (choice: DialogChoice) {
       this.passed = true;
       this.$store.dispatch('playerAnswered', choice.originalIndex);
+    },
+    dialogStyle (choice: DialogChoice) {
+      const style: any = {};
+      if (!choice.allowed) {
+        style.pointerEvents = 'none';
+        style.textDecoration = 'line-through';
+      }
+      return style;
     }
   }
 })

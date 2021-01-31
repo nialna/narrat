@@ -19,6 +19,7 @@ export interface DialogKey {
 export interface DialogChoice {
   choice: string;
   originalIndex: number;
+  allowed: boolean;
 }
 
 export interface SkillState {
@@ -33,6 +34,10 @@ export interface DataState {
   [key: string]: any;
 }
 
+export interface SkillCheckState {
+  passed: boolean;
+  available: boolean;
+}
 declare module '@vue/runtime-core' {
 
   // declare your own store states
@@ -41,6 +46,9 @@ declare module '@vue/runtime-core' {
       stack: MachineStack[];
       script: Parser.ParsedScript;
       data: DataState;
+    };
+    skillChecks: {
+      [key: string]: SkillCheckState;
     };
     dialog: DialogKey[];
     count: number;

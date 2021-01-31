@@ -20,7 +20,7 @@ declare namespace Parser {
   }
 
   interface SkillCheckOptions {
-    checkFunction: string;
+    id: string;
     skill: string;
     value: number;
     success: {
