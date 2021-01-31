@@ -38,44 +38,7 @@ function processRenpyCommands(ctx: ParserContext, lines: Parser.Line[]): Parser.
         }
         const prompt = line.branch![0];
         const choices = line.branch!.slice(1);
-        const prompts: Parser.ChoicePrompt[] = choices.map(choice => {
-          let choiceText = choice.operator;
-          let condition: string | undefined;
-          let skillCheck: Parser.SkillCheckOptions | undefined;
-          if (choice.operator === 'skillcheck') {
-            choiceText = choice.args[3];
-            const successBranch = choice.branch![0];
-            const failureBranch = choice.branch![1];
-            const success = {
-              text: successBranch.args[0],
-              branch: processRenpyCommands(ctx, successBranch.branch!),
-            };
-            let failedBranch: Parser.Branch | undefined;
-            if (failureBranch.branch) {
-              failedBranch = processRenpyCommands(ctx, failureBranch.branch!);
-            }
-            const failure = {
-              text: failureBranch.args[0],
-              branch: failedBranch,
-            };
-            skillCheck = {
-              checkFunction: choice.args[0],
-              skill: choice.args[1],
-              value: choice.args[2],
-              success,
-              failure,
-            };
-          }
-          if (choice.args[0] === 'if') {
-            condition = choice.args[1];
-          }
-          return {
-            choice: choiceText,
-            condition,
-            skillCheck,
-            branch: processRenpyCommands(ctx, choice.branch!),
-          };
-        });
+        const prompts: Parser.ChoicePrompt[] = choices.map((choice, index) => parseChoiceOption(ctx, choice, index));
         command.options = {
           prompt: processRenpyCommands(ctx, [prompt])[0],
           choices: prompts,
@@ -118,6 +81,45 @@ function processRenpyCommands(ctx: ParserContext, lines: Parser.Line[]): Parser.
   return branch;
 }
 
+function parseChoiceOption(ctx: ParserContext, choice: Parser.Line, index: number): Parser.ChoicePrompt {
+  let choiceText = choice.operator;
+  let condition: string | undefined;
+  let skillCheck: Parser.SkillCheckOptions | undefined;
+  if (choice.operator === 'skillcheck') {
+    choiceText = choice.args[3];
+    const successBranch = choice.branch![0];
+    const failureBranch = choice.branch![1];
+    const success = {
+      text: successBranch.args[0],
+      branch: processRenpyCommands(ctx, successBranch.branch!),
+    };
+    let failedBranch: Parser.Branch | undefined;
+    if (failureBranch.branch) {
+      failedBranch = processRenpyCommands(ctx, failureBranch.branch!);
+    }
+    const failure = {
+      text: failureBranch.args[0],
+      branch: failedBranch,
+    };
+    skillCheck = {
+      checkFunction: choice.args[0],
+      skill: choice.args[1],
+      value: choice.args[2],
+      success,
+      failure,
+    };
+  }
+  if (choice.args[0] === 'if') {
+    condition = choice.args[1];
+  }
+  return {
+    choice: choiceText,
+    condition,
+    skillCheck,
+    branch: processRenpyCommands(ctx, choice.branch!),
+    index,
+  };
+}
 function getLine(lines: Parser.Line[], index: number) {
   if (index < lines.length) return lines[index];
 }

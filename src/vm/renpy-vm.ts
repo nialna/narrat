@@ -121,9 +121,11 @@ export async function runChoice(context: ActionContext<State, State>, cmd: Parse
       const skill = config.skills[choice.skillCheck.skill];
       text = `[${skill.name} - Medium] ${text}`;
     }
-    return {
+    const result: DialogChoice = {
       choice: text,
-    } as DialogChoice;
+      originalIndex: choice.index,
+    };
+    return result;
   });
   runCommand(context, prompt, choices);
 }

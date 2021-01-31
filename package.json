@@ -1,6 +1,6 @@
 {
   "name": "narrat",
-  "version": "0.0.8-alpha",
+  "version": "0.0.8",
   "description": "narrat narrative engine",
   "main": "lib/index.js",
   "module": "lib/index.esm.js",
@@ -10,7 +10,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "snowpack dev",
-    "build": "NODE_ENV=production rollup -c"
+    "version": "npm run build",
+    "build": "NODE_ENV=production rollup -c",
+    "postversion": "git push && git push --tags"
   },
   "keywords": [
     "game"

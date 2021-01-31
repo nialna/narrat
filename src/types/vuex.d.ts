@@ -18,6 +18,7 @@ export interface DialogKey {
 
 export interface DialogChoice {
   choice: string;
+  originalIndex: number;
 }
 
 export interface SkillState {

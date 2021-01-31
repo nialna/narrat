@@ -6,7 +6,7 @@
       <span class="dialog-text" :style="textStyle">{{ options.text }}</span>
       <div class="dialog-choices" v-if="canInteract && choices">
         <p v-for="(choice, index) in choices" :key="index"
-        v-on:click="chooseOption(index)" class="dialog-choice">
+        v-on:click="chooseOption(choice)" class="dialog-choice">
           {{index + 1}}. –&nbsp; {{ choice.choice }}
         </p>
       </div>
@@ -77,9 +77,9 @@ export default defineComponent({
   },
 
   methods: {
-    chooseOption (index: number) {
+    chooseOption (choice: DialogChoice) {
       this.passed = true;
-      this.$store.dispatch('playerAnswered', index);
+      this.$store.dispatch('playerAnswered', choice.originalIndex);
     }
   }
 })

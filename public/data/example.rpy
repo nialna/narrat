@@ -34,3 +34,13 @@ main:
 testLabel:
     "Hello, I'm a different label"
 // Different labels can also be in different files
+
+choicesBug:
+    choice:
+        "choice prompt"
+        "choice 1":
+            "hello choice 1"
+        "Hidden choice." $if this.data.noTrue:
+            "hello hidden choice"
+        "Next choice":
+            "hello last choice"

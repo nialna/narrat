@@ -16,6 +16,7 @@ declare namespace Parser {
     branch: Branch;
     condition?: string;
     skillCheck?: SkillCheckOptions;
+    index: number;
   }
 
   interface SkillCheckOptions {
