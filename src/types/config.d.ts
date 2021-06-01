@@ -14,18 +14,20 @@ export interface Config {
   screens: {
     [key: string]: {
       background: string;
+      buttons: string[];
     };
   };
   buttons: {
     [key: string]: {
       enabled: boolean;
+      background: string;
       position: {
         left: number;
         top: number;
         width: number;
         height: number;
       };
-      action: string[];
+      action: string;
     };
   };
   skills: {

@@ -11,6 +11,8 @@ import { Config, SkillData } from './types/config';
 import { GameSave } from './types/game-save';
 import { SAVE_FILE } from './constants';
 import { AppOptions } from '.';
+import { getConfig } from './config';
+import { aspectRatioFit } from './utils/helpers';
 
 // define your typings for the store state
 
@@ -49,6 +51,15 @@ export function setupStore(options: AppOptions): SetupStoreResult {
       skillChecks: {},
       playing: false,
       currentScreen: 'default',
+      rendering: {
+        screenHeight: window.innerHeight,
+        screenWidth: window.innerWidth,
+        canvasWidth: window.innerWidth,
+        canvasHeight: window.innerHeight,
+        renderRatio: 1,
+        topOffset: 0,
+        leftOffset: 0,
+      },
     },
     getters: {
       machineHead (state): MachineStack {
@@ -195,6 +206,21 @@ export function setupStore(options: AppOptions): SetupStoreResult {
       setScreen (state, screen) {
         state.currentScreen = screen;
       },
+      updateScreenSize(state, { width, height }: {width: number, height: number}) {
+        state.rendering.screenHeight = height;
+        state.rendering.screenWidth = width;
+        const config = getConfig().layout;
+        const gameWidth = config.backgrounds.width;
+        const gameHeight = config.backgrounds.height
+        const screenWidth = width - config.minTextWidth;
+        const screenHeight = height;
+        const ratio = aspectRatioFit(screenWidth, screenHeight, gameWidth, gameHeight);
+        state.rendering.renderRatio = ratio;
+        const renderHeight = state.rendering.canvasHeight = gameHeight * ratio;
+        const renderWidth = state.rendering.canvasWidth = gameWidth * ratio;
+        state.rendering.topOffset = (screenHeight - renderHeight) / 2;
+        state.rendering.leftOffset = (screenWidth - renderWidth) / 2;
+      }
     },
     plugins,
   });

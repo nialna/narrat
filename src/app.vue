@@ -57,8 +57,6 @@ export default defineComponent({
       lineText: 'hello',
       gameLoaded: false,
       dialogPlaying: false,
-      screenWidth: window.innerWidth,
-      screenHeight: window.innerHeight,
     };
   },
   props: {
@@ -77,6 +75,7 @@ export default defineComponent({
     }, 100, {
       maxWait: 200,
     }));
+    this.updateScreenSize();
   },
 
   computed: {
@@ -104,8 +103,8 @@ export default defineComponent({
       return {
         width: `${this.backgroundSize.width}px`,
         height: `${this.backgroundSize.height}px`,
-        top: `${(this.screenHeight - this.backgroundSize.height) / 2}px`,
-        left: `${(this.screenWidth- getConfig().layout.minTextWidth - this.backgroundSize.width) / 2}px`,
+        top: `${this.backgroundSize.top}px`,
+        left: `${this.backgroundSize.left}px`,
         backgroundColor: 'red',
         position: 'absolute',
       };
@@ -116,14 +115,18 @@ export default defineComponent({
     gameHeight(): number {
       return getConfig().layout.backgrounds.height;
     },
-    backgroundSize(): {width: number, height: number} {
-      const config = getConfig().layout;
-      const screenWidth = this.screenWidth - config.minTextWidth;
-      const screenHeight = this.screenHeight;
-      const ratio = aspectRatioFit(screenWidth, screenHeight, this.gameWidth, this.gameHeight);
+    screenWidth(): number {
+      return this.$store.state.rendering.screenWidth;
+    },
+    screenHeight(): number {
+      return this.$store.state.rendering.screenHeight;
+    },
+    backgroundSize(): {width: number, height: number, left: number, top: number} {
       return {
-        width: this.gameWidth * ratio,
-        height: this.gameHeight * ratio
+        width: this.$store.state.rendering.canvasWidth,
+        height: this.$store.state.rendering.canvasHeight,
+        top: this.$store.state.rendering.topOffset,
+        left: this.$store.state.rendering.leftOffset,
       };
     },
     dialogStyle(): any {
@@ -164,8 +167,10 @@ export default defineComponent({
       this.$store.dispatch('choosePrompt', index);
     },
     updateScreenSize() {
-      this.screenWidth = window.innerWidth;
-      this.screenHeight = window.innerHeight;
+      this.$store.commit('updateScreenSize', {
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
     },
     getDialogBoxOptions (dialogKey: DialogKey, index: number): DialogBoxParameters {
       const info = getCharacterInfo(dialogKey.speaker);

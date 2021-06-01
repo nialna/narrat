@@ -58,9 +58,18 @@ declare module '@vue/runtime-core' {
     lastLabel: string;
     playing: boolean;
     currentScreen: string;
+    rendering: RenderingState;
   }
   
-
+  interface RenderingState {
+    screenWidth: number;
+    screenHeight: number;
+    canvasWidth: number;
+    canvasHeight: number;
+    renderRatio: number;
+    topOffset: number;
+    leftOffset: number;
+  }
   // provide typings for `this.$store`
   interface ComponentCustomProperties {
     $store: Store<State>

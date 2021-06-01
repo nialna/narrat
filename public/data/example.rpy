@@ -51,3 +51,7 @@ skillTest:
     $if this.skillCheck("testSkillCheck", "testSkill", 99): // You can use skillchecks in conditions
         "this skillcheck should fail"
     "after skillcheck"
+
+buttonLabel:
+    set_screen changed
+    "You clicked on the button!"

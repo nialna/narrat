@@ -63,7 +63,9 @@ export default defineComponent({
               choice = 4;
               break;
           }
-          this.chooseOption(this.choices[choice]);
+          if (choice !== -1) {
+            this.chooseOption(this.choices[choice]);
+          }
         }
       }
     });
