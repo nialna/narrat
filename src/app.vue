@@ -40,6 +40,7 @@ import { GameConfig } from './types/app-types';
 import { SAVE_FILE } from './constants';
 import { aspectRatioFit } from './utils/helpers';
 import { loadImages } from './utils/images-loader';
+import { debounce } from './utils/debounce';
 
 console.log('hello app');
 
@@ -49,13 +50,15 @@ export default defineComponent({
     DialogPicture,
     DebugMenu,
   },
-
+  
   data () {
     return {
       lineTitle: 'title',
       lineText: 'hello',
       gameLoaded: false,
       dialogPlaying: false,
+      screenWidth: window.innerWidth,
+      screenHeight: window.innerHeight,
     };
   },
   props: {
@@ -69,6 +72,11 @@ export default defineComponent({
     await loadImages(getConfig());
     await this.startMachine();
     this.gameLoaded = true;
+    window.addEventListener('resize', debounce(() => {
+      this.updateScreenSize();
+    }, 100, {
+      maxWait: 200,
+    }));
   },
 
   computed: {
@@ -96,8 +104,8 @@ export default defineComponent({
       return {
         width: `${this.backgroundSize.width}px`,
         height: `${this.backgroundSize.height}px`,
-        top: `${(window.innerHeight - this.backgroundSize.height) / 2}px`,
-        left: `${(window.innerWidth - getConfig().layout.minTextWidth - this.backgroundSize.width) / 2}px`,
+        top: `${(this.screenHeight - this.backgroundSize.height) / 2}px`,
+        left: `${(this.screenWidth- getConfig().layout.minTextWidth - this.backgroundSize.width) / 2}px`,
         backgroundColor: 'red',
         position: 'absolute',
       };
@@ -110,8 +118,8 @@ export default defineComponent({
     },
     backgroundSize(): {width: number, height: number} {
       const config = getConfig().layout;
-      const screenWidth = window.innerWidth - config.minTextWidth;
-      const screenHeight = window.innerHeight;
+      const screenWidth = this.screenWidth - config.minTextWidth;
+      const screenHeight = this.screenHeight;
       const ratio = aspectRatioFit(screenWidth, screenHeight, this.gameWidth, this.gameHeight);
       return {
         width: this.gameWidth * ratio,
@@ -124,7 +132,7 @@ export default defineComponent({
         backgroundColor: 'green',
         width: `${getConfig().layout.minTextWidth}px`,
         height: '100%',
-        left: `${window.innerWidth - getConfig().layout.minTextWidth}px`,
+        left: `${this.screenWidth - getConfig().layout.minTextWidth}px`,
         top: 0
       };
     },
@@ -154,6 +162,10 @@ export default defineComponent({
     },
     choosePrompt (index: number) {
       this.$store.dispatch('choosePrompt', index);
+    },
+    updateScreenSize() {
+      this.screenWidth = window.innerWidth;
+      this.screenHeight = window.innerHeight;
     },
     getDialogBoxOptions (dialogKey: DialogKey, index: number): DialogBoxParameters {
       const info = getCharacterInfo(dialogKey.speaker);

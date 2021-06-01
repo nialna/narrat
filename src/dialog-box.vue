@@ -36,6 +36,38 @@ export default defineComponent({
     active: Boolean,
   },
 
+  mounted() {
+    document.addEventListener('keydown', (e) => {
+      if (this.canInteract) {
+        let choice = -1;
+        if (e.key === ' ') {
+          this.chooseOption(0 as any);
+        } else {
+          switch (e.key) {
+            case ' ':
+              choice = 0;
+              break;
+            case '1':
+              choice = 0;
+              break;
+            case '2':
+              choice = 1;
+              break;
+            case '3':
+              choice = 2;
+              break;
+            case '4':
+              choice = 3;
+              break;
+            case '5':
+              choice = 4;
+              break;
+          }
+          this.chooseOption(this.choices[choice]);
+        }
+      }
+    });
+  },
   computed: {
     preText(): string {
       if (this.options!.title) {
