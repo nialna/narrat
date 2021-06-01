@@ -41,13 +41,16 @@ function gameLoop() {
   if (store.state.playing) {
     if (!canvas) {
       canvas = document.querySelector('#background-canvas') as HTMLCanvasElement;
-      ctx = canvas.getContext('2d');
+      if (canvas && !ctx) {
+        ctx = canvas.getContext('2d');
+      }
+    } else {
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      const currentScreen = store.state.currentScreen;
+      const bg = getConfig().screens[currentScreen].background;
+      ctx.drawImage(images[bg], 0, 0);
     }
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    const currentScreen = store.state.currentScreen;
-    const bg = getConfig().screens[currentScreen].background;
-    ctx.drawImage(images[bg], 0, 0);
   }
   window.requestAnimationFrame(gameLoop);
 }

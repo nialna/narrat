@@ -55,5 +55,8 @@
     "es6-promise": "^4.2.8",
     "vue": "^3.0.4",
     "vuex": "^4.0.0-rc.2"
+  },
+  "dependencies": {
+    "autoprefixer": "^10.2.6"
   }
 }

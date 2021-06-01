@@ -9,7 +9,7 @@
       "width": 880,
       "height": 720
     },
-    "minTextWidth": 800,
+    "minTextWidth": 400,
     "maxTextWidth": 800
   },
   "screens": {

@@ -187,7 +187,7 @@ function parseCodeLine(codeToProcess: string) {
 
 
 function findRenpyLines(ctx: ParserContext, data: string): Parser.Line[] {
-  const code = data.split('\n').map(line => {
+  const code = data.split(/[\r\n]/).map(line => {
     const commentIndex = line.search(/ *\/\//g);
     if (commentIndex !== -1) {
       return line.substr(0, commentIndex);
