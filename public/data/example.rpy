@@ -2,6 +2,7 @@ main:
     // This is a comment
     set quests.someQuest 2 // You can set any values in the data part of the state
     talk cat idle "\"hello %{playerName}\"" // This syntax allows replacing with values from inside data
+    set_screen changed
     $if this.data.quests.someQuest === 1: // You can do conditions on the state
         jump testLabel // Hello I'm a comment // You can jump to other labels
     choice: // Branching choices

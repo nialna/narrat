@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <div class="dialog" v-if="dialogPlaying">
+    <div class="background" :style="backgroundStyle" v-if="dialogPlaying">
+      <canvas :width="gameWidth" :height="gameHeight" id="background-canvas" />
+    </div>
+    <div class="dialog" :style="dialogStyle" v-if="dialogPlaying">
       <transition name="fade">
         <DialogPicture :pictureUrl="picture" v-if="picture" />
       </transition>
@@ -35,6 +38,9 @@ import { processText } from './utils/string-helpers';
 import { getConfig, setConfig } from './config';
 import { GameConfig } from './types/app-types';
 import { SAVE_FILE } from './constants';
+import { aspectRatioFit } from './utils/helpers';
+import { loadImages } from './utils/images-loader';
+
 console.log('hello app');
 
 export default defineComponent({
@@ -60,6 +66,7 @@ export default defineComponent({
     await setCharactersConfig(JSON.parse(charsFile));
     const configFile = await getFile('data/config.json');
     await setConfig(JSON.parse(configFile))
+    await loadImages(getConfig());
     await this.startMachine();
     this.gameLoaded = true;
   },
@@ -84,7 +91,43 @@ export default defineComponent({
     saveFile(): string | null {
       const saveString: string | null = localStorage.getItem(SAVE_FILE);
       return saveString;
-    }
+    },
+    backgroundStyle(): any {
+      return {
+        width: `${this.backgroundSize.width}px`,
+        height: `${this.backgroundSize.height}px`,
+        top: `${(window.innerHeight - this.backgroundSize.height) / 2}px`,
+        left: `${(window.innerWidth - getConfig().layout.minTextWidth - this.backgroundSize.width) / 2}px`,
+        backgroundColor: 'red',
+        position: 'absolute',
+      };
+    },
+    gameWidth(): number {
+      return getConfig().layout.backgrounds.width;
+    },
+    gameHeight(): number {
+      return getConfig().layout.backgrounds.height;
+    },
+    backgroundSize(): {width: number, height: number} {
+      const config = getConfig().layout;
+      const screenWidth = window.innerWidth - config.minTextWidth;
+      const screenHeight = window.innerHeight;
+      const ratio = aspectRatioFit(screenWidth, screenHeight, this.gameWidth, this.gameHeight);
+      return {
+        width: this.gameWidth * ratio,
+        height: this.gameHeight * ratio
+      };
+    },
+    dialogStyle(): any {
+      return {
+        position: 'absolute',
+        backgroundColor: 'green',
+        width: `${getConfig().layout.minTextWidth}px`,
+        height: '100%',
+        left: `${window.innerWidth - getConfig().layout.minTextWidth}px`,
+        top: 0
+      };
+    },
   },
 
   methods: {
@@ -93,20 +136,14 @@ export default defineComponent({
       return this.$store.dispatch('startMachine', { scriptPaths, config: getConfig() })
     },
     async startGame() {
+      this.$store.commit('startPlaying');
       await this.$store.dispatch('runLine');
       this.dialogPlaying = true;
     },
     async loadGame() {
+      this.$store.commit('startPlaying');
       await this.$store.dispatch('loadGame', this.saveFile);
       this.dialogPlaying = true;
-    },
-    scriptSelected(event: any) {
-      const gameName = event.target.value;
-      const scriptPaths = getConfig().scripts;
-      this.$store.dispatch('startMachine', { scriptPaths, config: getConfig() })
-      .then(() => {
-        this.dialogPlaying = true;
-      });
     },
     isDialogActive(i: number) {
       const result = (i === this.dialog.length - 1) && (this.$store.state.machine.stack.length > 0);
@@ -144,7 +181,6 @@ export default defineComponent({
 
 #app {
   background-color: black;
-  padding: 20px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -176,7 +212,6 @@ export default defineComponent({
 
 .dialog-container {
   flex-grow: 2;
-  margin-left: 85px;
   height: 100%;
   /* padding: 20px; */
   background-color: #171717;
@@ -189,13 +224,19 @@ export default defineComponent({
 }
 
 .dialog {
-  width: 100%;
-  position: relative;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  height: 100%;
   float: right;
+  margin: 0;
+}
+.background {
+  margin: 0;
+}
+
+#background-canvas {
+  width: 100%;
+  height: 100%;
 }
 </style>

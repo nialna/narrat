@@ -1,5 +1,33 @@
 export interface Config {
   gameTitle: string;
+  images: {
+    [key: string]: string;
+  };
+  layout: {
+    backgrounds: {
+      width: number;
+      height: number;
+    };
+    minTextWidth: number;
+    maxTextHeight: number;
+  };
+  screens: {
+    [key: string]: {
+      background: string;
+    };
+  };
+  buttons: {
+    [key: string]: {
+      enabled: boolean;
+      position: {
+        left: number;
+        top: number;
+        width: number;
+        height: number;
+      };
+      action: string[];
+    };
+  };
   skills: {
     [key: string]: SkillData;
   };

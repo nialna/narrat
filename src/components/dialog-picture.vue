@@ -22,7 +22,7 @@ export default defineComponent({
   width: 5em;
   height: 5em;
   bottom: 7em;
-  left: 0px;
+  left: -63px;
   border: 2px solid white;
   border-radius: 5px;
 }

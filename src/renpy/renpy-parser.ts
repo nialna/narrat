@@ -69,6 +69,13 @@ function processRenpyCommands(ctx: ParserContext, lines: Parser.Line[]): Parser.
         };
         currentLine++;
         break;
+      case 'set_screen':
+        command.commandType = 'set_screen';
+        command.options = {
+          screen: args[0],
+        };
+        currentLine++;
+        break;
       default:
           command.commandType = 'text';
           command.options = {

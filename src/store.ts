@@ -47,6 +47,8 @@ export function setupStore(options: AppOptions): SetupStoreResult {
       skills: {},
       lastLabel: 'main',
       skillChecks: {},
+      playing: false,
+      currentScreen: 'default',
     },
     getters: {
       machineHead (state): MachineStack {
@@ -186,6 +188,12 @@ export function setupStore(options: AppOptions): SetupStoreResult {
       },
       setData (state, { path, value }: { path: string, value: any }) {
         setDataHelper(state.machine.data, path, value);
+      },
+      startPlaying (state) {
+        state.playing = true;
+      },
+      setScreen (state, screen) {
+        state.currentScreen = screen;
       },
     },
     plugins,

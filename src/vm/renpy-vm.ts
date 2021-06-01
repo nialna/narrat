@@ -62,6 +62,9 @@ export async function runCommand(context: ActionContext<State, State>,
     case 'choice':
       await runChoice(context, cmd);
       break;
+    case 'set_screen':
+      commit('setScreen', (cmd.options as Parser.SetScreenOption).screen);
+      return dispatch('nextLine');
     default:
       break;
   }

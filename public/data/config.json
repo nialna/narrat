@@ -1,5 +1,39 @@
 {
   "gameTitle": "Lovely Lady RPG",
+  "images": {
+    "defaultBg": "img/backgrounds/default-bg.png",
+    "changedBg": "img/backgrounds/changed-bg.png"
+  },
+  "layout": {
+    "backgrounds": {
+      "width": 880,
+      "height": 720
+    },
+    "minTextWidth": 800,
+    "maxTextWidth": 800
+  },
+  "screens": {
+    "default": {
+      "background": "defaultBg"
+    },
+    "changed": {
+      "background": "changedBg"
+    }
+  },
+  "buttons": {
+    "testButton": {
+      "enabled": false,
+      "position": {
+        "left": 150,
+        "top": 150,
+        "width": 100,
+        "height": 100
+      },
+      "action": [
+        "jump testLabel"
+      ]
+    }
+  },
   "skills": {
     "testSkill": {
       "name": "Test Skill",

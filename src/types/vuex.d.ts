@@ -56,6 +56,8 @@ declare module '@vue/runtime-core' {
     ready: boolean;
     skills: SkillsState;
     lastLabel: string;
+    playing: boolean;
+    currentScreen: string;
   }
   
 
