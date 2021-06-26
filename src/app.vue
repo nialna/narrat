@@ -21,7 +21,7 @@
     <div v-else>
       <p>Loading... {{ config.charactersPath }}</p>
     </div>
-    <DebugMenu />
+    <DebugMenu v-if="options.debug" />
   </div>
 </template>
 
@@ -41,6 +41,7 @@ import { SAVE_FILE } from './constants';
 import { aspectRatioFit } from './utils/helpers';
 import { loadImages } from './utils/images-loader';
 import { debounce } from './utils/debounce';
+import { AppOptions } from '.';
 
 console.log('hello app');
 
@@ -61,6 +62,7 @@ export default defineComponent({
   },
   props: {
     config: Object as PropType<GameConfig>,
+    options: Object as PropType<AppOptions>,
   },
   async mounted () {
     const charsFile = await getFile('data/characters.json')

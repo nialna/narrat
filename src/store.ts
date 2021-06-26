@@ -25,10 +25,7 @@ export function setupStore(options: AppOptions): SetupStoreResult {
   const plugins = [];
 
   // checking process.env actually exists just for safety
-  if (typeof process !== 'undefined' && typeof process.env === 'object'
-    && process.env.NODE_ENV === 'production') {
-      // Do production stuff
-  } else {
+  if (options.logging) {
     plugins.push(createLogger());
   }
   // define injection key

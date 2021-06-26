@@ -14,6 +14,7 @@ import { MachineStack } from './types/vuex';
 import { debounce } from './utils/debounce';
 
 export interface AppOptions {
+  logging: boolean;
   debug: boolean;
 }
 
@@ -32,6 +33,7 @@ export function startApp(config: GameConfig, options: AppOptions) {
   console.log('%c Narrat game engine – [VI]{version} - {date}[/VI]', 'background: #222; color: #bada55');
   app = createApp(GameApp, {
     config,
+    options,
   });
   app.mount('#app');
   const storeSetup = setupStore(options);
