@@ -14,7 +14,6 @@ export async function runLine(context: ActionContext<State, State>) {
 export async function runCommand(context: ActionContext<State, State>,
   cmd: Parser.Command, choices?: DialogChoice[]) {
   const { state, commit, dispatch } = context;
-  console.log(cmd);
   switch(cmd.commandType) {
     case 'jump':
       const branch = cmd.args[0];
