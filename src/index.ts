@@ -28,7 +28,7 @@ export function startApp(config: GameConfig, options: AppOptions) {
     mousePos.x = e.clientX;
     mousePos.y = e.clientY;
   });
-  document.addEventListener('click', debounce(mouseclick, 100, { maxWait: 200}));
+  document.addEventListener('click', debounce(mouseclick, 100, { maxWait: 200, isImmediate: true }));
   console.log('%c Narrat game engine – [VI]{version} - {date}[/VI]', 'background: #222; color: #bada55');
   app = createApp(GameApp, {
     config,
