@@ -41,7 +41,11 @@ export default defineComponent({
       if (this.canInteract) {
         let choice = -1;
         if (e.key === ' ') {
-          this.chooseOption(0 as any);
+          if (this.choices) {
+            choice = 0;
+          } else {
+            this.chooseOption(0 as any);
+          }
         } else {
           switch (e.key) {
             case ' ':
@@ -63,9 +67,9 @@ export default defineComponent({
               choice = 4;
               break;
           }
-          if (choice !== -1) {
-            this.chooseOption(this.choices[choice]);
-          }
+        }
+        if (choice !== -1 && choice < this.choices.length) {
+          this.chooseOption(this.choices[choice]);
         }
       }
     });
