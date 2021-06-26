@@ -238,6 +238,7 @@ export default defineComponent({
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
+  padding-bottom: 200px;
 }
 
 .dialog {
