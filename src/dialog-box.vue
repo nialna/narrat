@@ -68,7 +68,7 @@ export default defineComponent({
               break;
           }
         }
-        if (choice !== -1 && choice < this.choices.length) {
+        if (choice !== -1 && this.choices && choice < this.choices.length) {
           this.chooseOption(this.choices[choice]);
         }
       }
