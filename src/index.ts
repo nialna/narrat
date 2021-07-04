@@ -78,11 +78,13 @@ function gameLoop() {
       const scaledMousePos = screenToCanvas(mousePos.x, mousePos.y, store.state.rendering);
       if (screen.buttons) {
         for (const buttonName of screen.buttons) {
-          const button = getConfig().buttons[buttonName];
-          const image = images[button.background];
-          ctx.drawImage(image, button.position.left, button.position.top);
-          if (aabb(scaledMousePos.x, scaledMousePos.y, 1, 1, button.position.left, button.position.top, button.position.width, button.position.height)) {
-            foundCollision = true;
+          if (store.state.buttons[buttonName].enabled) {
+            const button = getConfig().buttons[buttonName];
+            const image = images[button.background];
+            ctx.drawImage(image, button.position.left, button.position.top);
+            if (aabb(scaledMousePos.x, scaledMousePos.y, 1, 1, button.position.left, button.position.top, button.position.width, button.position.height)) {
+              foundCollision = true;
+            }
           }
         }
       }

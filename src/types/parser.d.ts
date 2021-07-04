@@ -1,5 +1,5 @@
 declare namespace Parser {
-  type CommandType = 'text' | 'jump' | 'choice' | 'set' | 'if' | 'talk' | 'set_screen';
+  type CommandType = 'text' | 'jump' | 'choice' | 'set' | 'if' | 'talk' | 'set_screen' | 'set_button';
   
   interface IfOptions {
     condition: string;

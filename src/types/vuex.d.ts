@@ -51,6 +51,7 @@ declare module '@vue/runtime-core' {
     skillChecks: {
       [key: string]: SkillCheckState;
     };
+    buttons: ButtonsState;
     dialog: DialogKey[];
     count: number;
     ready: boolean;
@@ -61,6 +62,11 @@ declare module '@vue/runtime-core' {
     rendering: RenderingState;
   }
   
+  interface ButtonsState {
+    [key: string]: {
+      enabled: boolean;
+    };
+  }
   interface RenderingState {
     screenWidth: number;
     screenHeight: number;

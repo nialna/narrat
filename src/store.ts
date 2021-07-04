@@ -7,7 +7,7 @@ import { DialogCallback, DialogKey, MachineStack } from './types/vuex';
 import { findDataHelper, setDataHelper } from './utils/data-helpers';
 import { getFile } from './utils/ajax';
 import { parseRenpyScript } from './renpy/renpy-parser';
-import { Config, SkillData } from './types/config';
+import { ButtonConfig, Config, SkillData } from './types/config';
 import { GameSave } from './types/game-save';
 import { SAVE_FILE } from './constants';
 import { AppOptions } from '.';
@@ -48,6 +48,7 @@ export function setupStore(options: AppOptions): SetupStoreResult {
       skillChecks: {},
       playing: false,
       currentScreen: 'default',
+      buttons: {},
       rendering: {
         screenHeight: window.innerHeight,
         screenWidth: window.innerWidth,
@@ -89,6 +90,7 @@ export function setupStore(options: AppOptions): SetupStoreResult {
         }
         const end = Date.now();
         console.log(`script parsed in ${end - start} ms`);
+        commit('setButtons', payload.config.buttons);
         commit('setScript', scripts);
         commit('setupSkills', payload.config.skills);
       },
@@ -119,6 +121,7 @@ export function setupStore(options: AppOptions): SetupStoreResult {
           data: state.machine.data,
           skills: state.skills,
           dialog: state.dialog,
+          buttons: state.buttons,
           lastLabel: state.lastLabel,
           skillChecks: state.skillChecks,
         };
@@ -137,6 +140,7 @@ export function setupStore(options: AppOptions): SetupStoreResult {
         state.machine.data = save.data;
         state.skills = save.skills;
         state.dialog = save.dialog;
+        state.buttons = save.buttons;
         state.lastLabel = save.lastLabel;
         state.skillChecks = save.skillChecks;
       },
@@ -202,6 +206,16 @@ export function setupStore(options: AppOptions): SetupStoreResult {
       },
       setScreen (state, screen) {
         state.currentScreen = screen;
+      },
+      setButtons (state, buttons: { [key: string]: ButtonConfig }) {
+        for (const i in buttons) {
+          state.buttons[i] = {
+            enabled: buttons[i].enabled,
+          };
+        }
+      },
+      changeButton (state, payload: { button: string, enabled: boolean }) {
+        state.buttons[payload.button].enabled = payload.enabled;
       },
       updateScreenSize(state, { width, height }: {width: number, height: number}) {
         state.rendering.screenHeight = height;

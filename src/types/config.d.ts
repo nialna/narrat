@@ -18,17 +18,7 @@ export interface Config {
     };
   };
   buttons: {
-    [key: string]: {
-      enabled: boolean;
-      background: string;
-      position: {
-        left: number;
-        top: number;
-        width: number;
-        height: number;
-      };
-      action: string;
-    };
+    [key: string]: ButtonConfig;
   };
   skills: {
     [key: string]: SkillData;
@@ -36,6 +26,17 @@ export interface Config {
   scripts: string[];
 }
 
+export interface ButtonConfig {
+  enabled: boolean;
+  background: string;
+  position: {
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+  };
+  action: string;
+}
 export interface SkillData {
   name: string;
   description: string;

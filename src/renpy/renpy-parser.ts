@@ -79,6 +79,13 @@ function processRenpyCommands(ctx: ParserContext, lines: Parser.Line[]): Parser.
         };
         currentLine++;
         break;
+      case 'set_button':
+        command.commandType = 'set_button';
+        if (command.args.length !== 2) {
+          error(ctx, line.line, `set_button command should have 2 arguments`);
+        }
+        currentLine++;
+        break;
       default:
           command.commandType = 'text';
           command.options = {

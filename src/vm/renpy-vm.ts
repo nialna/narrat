@@ -64,6 +64,13 @@ export async function runCommand(context: ActionContext<State, State>,
     case 'set_screen':
       commit('setScreen', (cmd.options as Parser.SetScreenOption).screen);
       return dispatch('nextLine');
+    case 'set_button':
+      console.log(cmd.args);
+      commit('changeButton', {
+        button: cmd.args[0],
+        enabled: cmd.args[1],
+      });
+      return dispatch('nextLine');
     default:
       break;
   }

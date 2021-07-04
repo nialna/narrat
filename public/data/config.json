@@ -24,7 +24,7 @@
   },
   "buttons": {
     "testButton": {
-      "enabled": true,
+      "enabled": false,
       "background": "littleButton",
       "position": {
         "left": 150,
