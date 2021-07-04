@@ -6,7 +6,7 @@ window.addEventListener('load', () => {
     configPath: 'data/config.json',
   }, {
     logging: false,
-    debug: false,
+    debug: true,
   });
 });
 

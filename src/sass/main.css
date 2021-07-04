@@ -46,3 +46,12 @@ body {
 select {
   background-color: grey;
 }
+
+button {
+  background-color: #4fc08d;
+  color: white;
+  border-radius: 30px;
+  padding: 10px;
+  font-weight: 800;
+  margin: 5px;
+}

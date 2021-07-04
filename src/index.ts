@@ -39,6 +39,14 @@ export function startApp(config: GameConfig, options: AppOptions) {
   const storeSetup = setupStore(options);
   store = storeSetup.store;
   app.use(store, storeSetup.key);
+  if (options.debug) {
+    const narrat = {
+      store,
+      app,
+      state: store.state,
+    };
+    (window as any).narrat = narrat
+  }
   // Hot Module Replacement (HMR) - Remove this snippet to remove HMR.
   // Learn more: https://www.snowpack.dev/concepts/hot-module-replacement
   if ((import.meta as any).hot) {
