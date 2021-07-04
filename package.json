@@ -1,6 +1,6 @@
 {
   "name": "narrat",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "narrat narrative engine",
   "main": "lib/index.js",
   "module": "lib/index.esm.js",
