@@ -52,6 +52,9 @@ function processRenpyCommands(ctx: ParserContext, lines: Parser.Line[]): Parser.
         break;
       case 'talk':
         command.commandType = 'talk';
+        if (command.args.length < 3) {
+          error(ctx, line.line, `Talk command needs 3 arguments!`);
+        }
         currentLine++;
         break;
       case 'if':
@@ -93,6 +96,9 @@ function parseChoiceOption(ctx: ParserContext, choice: Parser.Line, index: numbe
   let condition: string | undefined;
   let skillCheck: Parser.SkillCheckOptions | undefined;
   if (choice.operator === 'skillcheck') {
+    if (choice.args.length < 4) {
+      error(ctx, choice.line, `Skillchecks need 4 arguments!`);
+    }
     choiceText = choice.args[3];
     const successBranch = choice.branch![0];
     const failureBranch = choice.branch![1];
