@@ -27,6 +27,7 @@ main:
             "ok we can make choices"
         "let's do nothing!":
             "wow ok :("
+    clear_dialog
     "Hi I'm the narrator"
     $if this.skillCheck("someSkillCheck", "testSkill", 40): // You can use skillchecks in conditions
         "wow the skillcheck succeeded"

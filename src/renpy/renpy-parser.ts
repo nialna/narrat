@@ -86,6 +86,10 @@ function processRenpyCommands(ctx: ParserContext, lines: Parser.Line[]): Parser.
         }
         currentLine++;
         break;
+      case 'clear_dialog':
+        command.commandType = 'clear_dialog';
+        currentLine++;
+        break;
       default:
           command.commandType = 'text';
           command.options = {

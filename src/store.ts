@@ -214,6 +214,9 @@ export function setupStore(options: AppOptions): SetupStoreResult {
           };
         }
       },
+      clearDialog (state) {
+        state.dialog.splice(0);
+      },
       changeButton (state, payload: { button: string, enabled: boolean }) {
         state.buttons[payload.button].enabled = payload.enabled;
       },
