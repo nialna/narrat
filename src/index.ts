@@ -109,16 +109,18 @@ function mouseclick(e: MouseEvent) {
   const screen = getConfig().screens[currentScreen];
   if (screen.buttons) {
     for (const buttonName of screen.buttons) {
-      const button = getConfig().buttons[buttonName];
-      if (aabb(scaledMousePos.x, scaledMousePos.y, 1, 1, button.position.left, button.position.top, button.position.width, button.position.height)) {
-        // clicked button
-        const scriptToRun = button.action;
-        const newStack: MachineStack = {
-          branch: store.state.machine.script[scriptToRun],
-          currentIndex: 0,
-        };
-        store.commit('setStack', newStack);
-        store.dispatch('runLine');
+      if (store.state.buttons[buttonName].enabled) {
+        const button = getConfig().buttons[buttonName];
+        if (aabb(scaledMousePos.x, scaledMousePos.y, 1, 1, button.position.left, button.position.top, button.position.width, button.position.height)) {
+          // clicked button
+          const scriptToRun = button.action;
+          const newStack: MachineStack = {
+            branch: store.state.machine.script[scriptToRun],
+            currentIndex: 0,
+          };
+          store.commit('setStack', newStack);
+          store.dispatch('runLine');
+        }
       }
     }
   }
