@@ -3,11 +3,11 @@
     <div class="background" :style="backgroundStyle" v-if="dialogPlaying">
       <canvas :width="gameWidth" :height="gameHeight" id="background-canvas" />
     </div>
-    <div class="dialog" :style="dialogStyle" v-if="dialogPlaying">
+    <div class="dialog override" :style="dialogStyle" v-if="dialogPlaying">
       <transition name="fade">
         <DialogPicture :pictureUrl="picture" v-if="picture" />
       </transition>
-      <div class="dialog-container">
+      <div class="dialog-container override ">
         <transition-group name="list" tag="div" class="w-full">
           <DialogBox v-for="(dialog, i) in dialog" :key="i"
             :options="getDialogBoxOptions(dialog, i)" :active="isDialogActive(i)"/>
@@ -15,8 +15,8 @@
       </div>
     </div>
     <div v-else-if="gameLoaded" class="flex flex-col">
-      <button class="button" @click="startGame">Start Game</button>
-      <button class="button" @click="loadGame" v-if="saveFile">Continue Game</button>
+      <button class="button menu-button start-button override" @click="startGame">Start Game</button>
+      <button class="button menu-button continue-button override" @click="loadGame" v-if="saveFile">Continue Game</button>
     </div>
     <div v-else>
       <p>Loading... {{ config.charactersPath }}</p>

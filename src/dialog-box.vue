@@ -1,17 +1,17 @@
 <template>
-  <div class="dialog-box w-full" :style="dialogBoxStyle">
+  <div class="dialog-box w-full override" :style="dialogBoxStyle">
     <div class="dialog-content">
-      <span class="dialog-title" v-if="options.title" :style="titleStyle">{{ options.title }}</span>
-      <span class="dialog-text dialog-separator" :style="textStyle" v-html="preText"></span>
-      <span class="dialog-text" :style="textStyle">{{ options.text }}</span>
+      <span class="dialog-title override" v-if="options.title" :style="titleStyle">{{ options.title }}</span>
+      <span class="dialog-text dialog-separator override" :style="textStyle" v-html="preText"></span>
+      <span class="dialog-text override" :style="textStyle">{{ options.text }}</span>
       <div class="dialog-choices" v-if="canInteract && choices">
         <p v-for="(choice, index) in choices" :key="index" :style="dialogStyle(choice)"
-        v-on:click="chooseOption(choice)" class="dialog-choice">
+        v-on:click="chooseOption(choice)" class="dialog-choice override">
           {{index + 1}}. –&nbsp; {{ choice.choice }}
         </p>
       </div>
       <div v-else-if="canInteract" class="buttons-container">
-        <div v-on:click="chooseOption(0)" class="interact-button">Continue</div>
+        <div v-on:click="chooseOption(0)" class="interact-button override">Continue</div>
       </div>
     </div>
   </div>

@@ -1,6 +1,6 @@
 <template>
-  <div class="dialog-picture">
-    <img :src="pictureUrl" class="picture" />
+  <div class="dialog-picture override">
+    <img :src="pictureUrl" class="picture override" />
   </div>
 </template>
 
