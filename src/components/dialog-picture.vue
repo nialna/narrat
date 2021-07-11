@@ -19,10 +19,10 @@ export default defineComponent({
 
 .dialog-picture {
   position: absolute;
-  width: 5em;
-  height: 5em;
-  bottom: 7em;
-  left: -63px;
+  width: 200px;
+  height: 200px;
+  bottom: 200px;
+  left: -200px;
   border: 2px solid white;
   border-radius: 5px;
 }
