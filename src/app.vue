@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <VolumeControls />
     <div class="background" :style="backgroundStyle" v-if="dialogPlaying">
       <canvas :width="gameWidth" :height="gameHeight" id="background-canvas" />
     </div>
@@ -30,6 +31,7 @@ import { defineComponent, PropType } from 'vue'
 import DialogBox from './dialog-box.vue';
 import DialogPicture from './components/dialog-picture.vue';
 import DebugMenu from './components/debug/debug-menu.vue';
+import VolumeControls from './components/volume-controls.vue';
 import { getFile } from './utils/ajax';
 import { getCharacterInfo, getCharacterPictureUrl, setCharactersConfig } from '@/utils/characters';
 import { DialogKey } from './types/vuex';
@@ -40,6 +42,7 @@ import { GameConfig } from './types/app-types';
 import { SAVE_FILE } from './constants';
 import { aspectRatioFit } from './utils/helpers';
 import { loadImages } from './utils/images-loader';
+import { loadAudioAssets } from './utils/audio-loader';
 import { debounce } from './utils/debounce';
 import { AppOptions } from '.';
 
@@ -47,6 +50,7 @@ console.log('hello app');
 
 export default defineComponent({
   components: {
+    VolumeControls,
     DialogBox,
     DialogPicture,
     DebugMenu,
@@ -70,6 +74,7 @@ export default defineComponent({
     const configFile = await getFile('data/config.json');
     await setConfig(JSON.parse(configFile))
     await loadImages(getConfig());
+    await loadAudioAssets(getConfig());
     await this.startMachine();
     this.gameLoaded = true;
     window.addEventListener('resize', debounce(() => {

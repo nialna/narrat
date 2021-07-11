@@ -58,6 +58,7 @@ export function setupStore(options: AppOptions): SetupStoreResult {
         topOffset: 0,
         leftOffset: 0,
       },
+      audio: {},
     },
     getters: {
       machineHead (state): MachineStack {
@@ -234,6 +235,9 @@ export function setupStore(options: AppOptions): SetupStoreResult {
         const renderWidth = state.rendering.canvasWidth = gameWidth * ratio;
         state.rendering.topOffset = (screenHeight - renderHeight) / 2;
         state.rendering.leftOffset = (screenWidth - renderWidth) / 2;
+      },
+      setMusic(state, music) {
+        state.audio.currentMusic = music
       }
     },
     plugins,

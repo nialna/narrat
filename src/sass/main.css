@@ -55,3 +55,11 @@ button {
   font-weight: 800;
   margin: 5px;
 }
+
+.dialog-picture.override {
+  width: 200px;
+  height: 200px;
+  bottom: 200px;
+  left: -200px;
+  border: none;
+}

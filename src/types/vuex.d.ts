@@ -60,6 +60,9 @@ declare module '@vue/runtime-core' {
     playing: boolean;
     currentScreen: string;
     rendering: RenderingState;
+    audio: {
+      currentMusic?: string;
+    };
   }
   
   interface ButtonsState {

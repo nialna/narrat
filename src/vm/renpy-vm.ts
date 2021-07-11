@@ -5,6 +5,7 @@ import { DialogCallback, DialogKey, DialogChoice, MachineStack } from '@/types/v
 import { processSkillCheck, runCondition, runConditionCommand, runSkillCheck } from '@/renpy/renpy-helpers';
 import { getConfig } from '@/config';
 import { getSkillCheckState } from '@/utils/skillchecks';
+import { audio, changeMusic, playSound } from '@/utils/audio-loader';
 
 export async function runLine(context: ActionContext<State, State>) {
   const cmd = context.getters.currentLine as Parser.Command;
@@ -73,6 +74,17 @@ export async function runCommand(context: ActionContext<State, State>,
         button: cmd.args[0],
         enabled: cmd.args[1],
       });
+      return dispatch('nextLine');
+    case 'play':
+      const options = cmd.options as Parser.PlayOptions;
+      if (options.mode === 'music') {
+        changeMusic(context, options.audio);
+      } else {
+        playSound(options.audio);
+      }
+      return dispatch('nextLine');
+    case 'wait':
+      await timeout((cmd.options as Parser.WaitOptions).duration);
       return dispatch('nextLine');
     default:
       break;

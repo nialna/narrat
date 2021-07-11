@@ -1,5 +1,5 @@
 declare namespace Parser {
-  type CommandType = 'text' | 'jump' | 'choice' | 'set' | 'if' | 'talk' | 'set_screen' | 'set_button' | 'clear_dialog';
+  type CommandType = 'text' | 'jump' | 'choice' | 'set' | 'if' | 'talk' | 'set_screen' | 'set_button' | 'clear_dialog' | 'play' | 'wait';
   
   interface IfOptions {
     condition: string;
@@ -19,6 +19,11 @@ declare namespace Parser {
     index: number;
   }
 
+  interface PlayOptions {
+    mode: 'sound' | 'music';
+    audio: string;
+  }
+
   interface SkillCheckOptions {
     id: string;
     skill: string;
@@ -36,6 +41,10 @@ declare namespace Parser {
   interface JumpOptions {
     label: string;
   }
+
+  interface WaitOptions {
+    duration: number;
+  }
   
   interface IfOptions {
     branch: Branch;
@@ -50,7 +59,7 @@ declare namespace Parser {
   }
   interface EmptyOptions {}
 
-  type CommandOptions = IfOptions | JumpOptions | EmptyOptions | TextOptions | ChoiceOptions | SetScreenOption;
+  type CommandOptions = IfOptions | JumpOptions | EmptyOptions | TextOptions | ChoiceOptions | SetScreenOption | PlayOptions | WaitOptions;
   
   interface Command {
     code: string;

@@ -24,8 +24,23 @@ export interface Config {
     [key: string]: SkillData;
   };
   scripts: string[];
+  sound: {
+    [key: string]: SoundConfig;
+  };
+  music: {
+    [key: string]: MusicConfig;
+  };
 }
 
+export interface SoundConfig {
+  path: string;
+  volume: number;
+  rate: number;
+}
+
+export interface MusicConfig extends SoundConfig {
+  loop?: boolean;
+}
 export interface ButtonConfig {
   enabled: boolean;
   background: string;

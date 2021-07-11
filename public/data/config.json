@@ -43,5 +43,18 @@
   },
   "scripts": [
     "data/example.rpy"
-  ]
+  ],
+  "sound": {
+    "alarm": {
+      "path": "sounds/alarm.wav"
+    }
+  },
+  "music": {
+    "calm": {
+      "path": "music/calm.mp3"
+    },
+    "metal": {
+      "path": "music/metal.mp3"
+    }
+  }
 }

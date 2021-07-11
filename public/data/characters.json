@@ -15,14 +15,39 @@
     },
     "cat": {
       "sprites": {
-        "default": "cat_idle.jpg",
-        "idle": "cat_idle.jpg",
-        "feral": "cat_idle.jpg"
+        "idle": "cat_idle.jpg"
+      },
+      "style": {
+        "color": "white"
+      },
+      "name": "Generic Cat"
+    },
+    "helper": {
+      "sprites": {
+        "idle": "helper_cat.png"
+      },
+      "style": {
+        "color": "green"
+      },
+      "name": "Helper Cat"
+    },
+    "music_cat": {
+      "sprites": {
+        "idle": "music_cat.jpeg"
+      },
+      "style": {
+        "color": "green"
+      },
+      "name": "Music Cat"
+    },
+    "inner": {
+      "sprites": {
+        "idle": "inner_voice.png"
       },
       "style": {
         "color": "red"
       },
-      "name": "cat"
+      "name": "Inner Voice"
     }
   }
 }

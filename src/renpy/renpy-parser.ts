@@ -90,6 +90,21 @@ function processRenpyCommands(ctx: ParserContext, lines: Parser.Line[]): Parser.
         command.commandType = 'clear_dialog';
         currentLine++;
         break;
+      case 'play':
+        command.commandType = 'play';
+        command.options = {
+          mode: command.args[0],
+          audio: command.args[1],
+        };
+        currentLine++;
+        break;
+      case 'wait':
+        command.commandType = 'wait';
+        command.options = {
+          duration: parseInt(command.args[0], 10),
+        };
+        currentLine++;
+        break;
       default:
           command.commandType = 'text';
           command.options = {
