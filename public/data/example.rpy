@@ -8,12 +8,12 @@ main:
             jump dontAskForHelp
 
 askForHelp:
+    play sound "alarm"
+    wait 2000
+    play sound "alarm"
+    wait 2000
+    play sound "alarm"
     clear_dialog
-    play sound "alarm"
-    wait 2000
-    play sound "alarm"
-    wait 2000
-    play sound "alarm"
     talk helper idle "Hello! I heard you're trying to play the narrat demo!"
     talk helper idle "As you've probably noticed, you can make choices in this."
     talk helper idle "There are lots of things you can do to make an interactive story in Narrat really. Choices are one of the most useful ones."
@@ -69,3 +69,21 @@ otherFeatures:
         "For example this line only appears if you passed a skill check"
     "This engine is still very early and not fully documented yet, but you can use at the example demo and how it is made."
     "There is also a screen feature on the left where you can display background images with interactive buttons."
+    jump showMap
+
+showMap:
+    set_screen map
+    set_button parkButton true
+    talk helper idle "This is an example map. There are buttons you can click on. It is possible to dynanically enable and disable buttons in your script"
+
+shopButton:
+    "You visit the shop and buy some water and a snack"
+    talk inner idle "That water was very hydrating!"
+    talk helper idle "Now that you're well hydrated and on your way to eat your 5 a day, you could learn more about how to make games"
+    talk helper idle "The best way is to read the readme page on the narrat github page"
+    talk helper idle "You can look at how the demo is made, especially by opening the example.rpy file which is the script for this demo"
+
+parkButton:
+    "You go on a walk to the little park"
+    talk inner idle "That was a nice walk! Now I feel like going to the shop to buy water"
+    set_button shopButton true

@@ -1,9 +1,10 @@
 {
   "gameTitle": "Lovely Lady RPG",
   "images": {
-    "defaultBg": "img/backgrounds/default-bg.png",
-    "changedBg": "img/backgrounds/changed-bg.png",
-    "littleButton": "img/ui/little-button.png"
+    "narrat": "img/backgrounds/narrat.png",
+    "map": "img/backgrounds/map.png",
+    "shopButton": "img/ui/shop-button.png",
+    "parkButton": "img/ui/park-button.png"
   },
   "layout": {
     "backgrounds": {
@@ -15,24 +16,35 @@
   },
   "screens": {
     "default": {
-      "background": "defaultBg",
-      "buttons": ["testButton"]
+      "background": "narrat"
     },
-    "changed": {
-      "background": "changedBg"
+    "map": {
+      "background": "map",
+      "buttons": ["shopButton", "parkButton"]
     }
   },
   "buttons": {
-    "testButton": {
+    "shopButton": {
       "enabled": false,
-      "background": "littleButton",
+      "background": "shopButton",
       "position": {
-        "left": 150,
-        "top": 150,
-        "width": 100,
-        "height": 100
+        "left": 38,
+        "top": 6,
+        "width": 255,
+        "height": 226
       },
-      "action": "buttonLabel"
+      "action": "shopButton"
+    },
+    "parkButton": {
+      "enabled": false,
+      "background": "parkButton",
+      "position": {
+        "left": 632,
+        "top": 86,
+        "width": 255,
+        "height": 226
+      },
+      "action": "parkButton"
     }
   },
   "skills": {
