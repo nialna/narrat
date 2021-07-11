@@ -53,7 +53,7 @@ export async function runCommand(context: ActionContext<State, State>,
       await textCommand(commit, {
         speaker: cmd.args[0],
         pose: cmd.args[1],
-        text: cmd.args[2],
+        text: `"${cmd.args[2]}"`,
         choices,
         interactive: true,
       });
