@@ -1,6 +1,17 @@
 declare namespace Parser {
-  type CommandType = 'text' | 'jump' | 'choice' | 'set' | 'if' | 'talk' | 'set_screen' | 'set_button' | 'clear_dialog' | 'play' | 'wait';
-  
+  type CommandType =
+    | 'text'
+    | 'jump'
+    | 'choice'
+    | 'set'
+    | 'if'
+    | 'talk'
+    | 'set_screen'
+    | 'set_button'
+    | 'clear_dialog'
+    | 'play'
+    | 'wait';
+
   interface IfOptions {
     condition: string;
     success: Branch;
@@ -45,11 +56,11 @@ declare namespace Parser {
   interface WaitOptions {
     duration: number;
   }
-  
+
   interface IfOptions {
     branch: Branch;
   }
-  
+
   interface TextOptions {
     text: string;
   }
@@ -59,8 +70,16 @@ declare namespace Parser {
   }
   interface EmptyOptions {}
 
-  type CommandOptions = IfOptions | JumpOptions | EmptyOptions | TextOptions | ChoiceOptions | SetScreenOption | PlayOptions | WaitOptions;
-  
+  type CommandOptions =
+    | IfOptions
+    | JumpOptions
+    | EmptyOptions
+    | TextOptions
+    | ChoiceOptions
+    | SetScreenOption
+    | PlayOptions
+    | WaitOptions;
+
   interface Command {
     code: string;
     args: string[];
@@ -68,10 +87,10 @@ declare namespace Parser {
     commandType: CommandType;
     options: CommandOptions;
   }
-  
+
   type Branch = Command[];
 
-  interface ParsedScript {
+  export interface ParsedScript {
     [key: string]: Parser.Branch;
   }
 

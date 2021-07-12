@@ -1,6 +1,6 @@
-import { SkillCheckState } from "@/types/vuex";
-import { State } from "vue";
-import { ActionContext, Store } from "vuex";
+import { SkillCheckState } from '@/types/vuex';
+import { State } from 'vue';
+import { ActionContext } from 'vuex';
 
 export function createSkillCheckState(): SkillCheckState {
   const skillCheck = {

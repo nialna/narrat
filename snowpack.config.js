@@ -4,18 +4,18 @@
 /** @type {import("snowpack").SnowpackUserConfig } */
 module.exports = {
   mount: {
-    "src": "/dist",
+    src: "/dist",
     public: "/",
   },
   plugins: [
-    '@snowpack/plugin-vue',
-    '@snowpack/plugin-typescript',
+    "@snowpack/plugin-vue",
+    "@snowpack/plugin-typescript",
     "@snowpack/plugin-postcss",
     // ['@snowpack/plugin-sass', { /* see options below */ }],
   ],
   alias: {
-    '@': './src',
-  }
+    "@": "./src",
+  },
   // installOptions: {},
   // devOptions: {},
   // buildOptions: {},

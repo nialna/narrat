@@ -1,21 +1,21 @@
+/* eslint-disable no-case-declarations */
 import { ActionContext, Commit } from 'vuex';
 import { State } from 'vue';
 import { timeout } from '@/utils/promises';
-import { DialogCallback, DialogKey, DialogChoice, MachineStack } from '@/types/vuex';
-import { processSkillCheck, runCondition, runConditionCommand, runSkillCheck } from '@/renpy/renpy-helpers';
+import { DialogKey, DialogChoice, MachineStack } from '@/types/vuex';
+import { processSkillCheck, runCondition, runConditionCommand } from '@/renpy/renpy-helpers';
 import { getConfig } from '@/config';
 import { getSkillCheckState } from '@/utils/skillchecks';
-import { audio, changeMusic, playSound } from '@/utils/audio-loader';
+import { changeMusic, playSound } from '@/utils/audio-loader';
 
 export async function runLine(context: ActionContext<State, State>) {
   const cmd = context.getters.currentLine as Parser.Command;
   await runCommand(context, cmd);
 }
 
-export async function runCommand(context: ActionContext<State, State>,
-  cmd: Parser.Command, choices?: DialogChoice[]) {
+export async function runCommand(context: ActionContext<State, State>, cmd: Parser.Command, choices?: DialogChoice[]) {
   const { state, commit, dispatch } = context;
-  switch(cmd.commandType) {
+  switch (cmd.commandType) {
     case 'jump':
       const branch = cmd.args[0];
       const newStack: MachineStack = {
@@ -50,7 +50,6 @@ export async function runCommand(context: ActionContext<State, State>,
       }
       return dispatch('nextLine');
     case 'talk':
-      const pose = cmd.args[1];
       await textCommand(commit, {
         speaker: cmd.args[0],
         pose: cmd.args[1],
@@ -91,13 +90,13 @@ export async function runCommand(context: ActionContext<State, State>,
   }
 }
 
-export async function playerAnswered (context: ActionContext<State, State>, choiceIndex: number) {
-  const { commit, dispatch, state } = context;
+export async function playerAnswered(context: ActionContext<State, State>, choiceIndex: number) {
+  const { commit, dispatch } = context;
   const cmd = context.getters.currentLine as Parser.Command;
-  
-  switch(cmd.commandType) {
+
+  switch (cmd.commandType) {
     case 'choice':
-      const options = (cmd.options as Parser.ChoiceOptions);
+      const options = cmd.options as Parser.ChoiceOptions;
       const choice = options.choices[choiceIndex];
       let playerText = choice.choice;
       let newBranch: Parser.Branch | undefined;
@@ -111,7 +110,7 @@ export async function playerAnswered (context: ActionContext<State, State>, choi
           const result = processSkillCheck(context, skillcheck);
           const winner = result ? skillcheck.success : skillcheck.failure;
           newBranch = winner.branch;
-          playerText = `[${result ? 'SUCCESS' : 'FAILURE'}] – ${winner.text}`;
+          playerText = `[${result ? 'SUCCESS' : 'FAILURE'}] – ${winner.text}`;
         }
       } else {
         newBranch = choice.branch;
@@ -139,36 +138,37 @@ export async function playerAnswered (context: ActionContext<State, State>, choi
 }
 
 export async function runChoice(context: ActionContext<State, State>, cmd: Parser.Command) {
-  const { commit, state } = context;
-  const options = (cmd.options as Parser.ChoiceOptions);
+  const options = cmd.options as Parser.ChoiceOptions;
   const prompt = options.prompt;
-  const choices = options.choices.filter(choice => {
-    // Delete the choice if it fails a condition
-    if (choice.condition) {
-      return runCondition(context, choice.condition);
-    }
-    return true;
-  }).map(choice => {
-    let text = choice.choice;
-    let choiceAllowed = true;
-    if (choice.skillCheck) {
-      const config = getConfig();
-      const skill = config.skills[choice.skillCheck.skill];
-      const skillCheckState = getSkillCheckState(context, choice.skillCheck.id);
-      if (!skillCheckState.available) {
-        choiceAllowed = false;
-        text = `[${skill.name} - Failed] ${text}`;
-      } else if (!skillCheckState.passed) {
-        text = `[${skill.name} - Medium] ${text}`;
+  const choices = options.choices
+    .filter((choice) => {
+      // Delete the choice if it fails a condition
+      if (choice.condition) {
+        return runCondition(context, choice.condition);
       }
-    }
-    const result: DialogChoice = {
-      choice: text,
-      originalIndex: choice.index,
-      allowed: choiceAllowed,
-    };
-    return result;
-  });
+      return true;
+    })
+    .map((choice) => {
+      let text = choice.choice;
+      let choiceAllowed = true;
+      if (choice.skillCheck) {
+        const config = getConfig();
+        const skill = config.skills[choice.skillCheck.skill];
+        const skillCheckState = getSkillCheckState(context, choice.skillCheck.id);
+        if (!skillCheckState.available) {
+          choiceAllowed = false;
+          text = `[${skill.name} - Failed] ${text}`;
+        } else if (!skillCheckState.passed) {
+          text = `[${skill.name} - Medium] ${text}`;
+        }
+      }
+      const result: DialogChoice = {
+        choice: text,
+        originalIndex: choice.index,
+        allowed: choiceAllowed,
+      };
+      return result;
+    });
   runCommand(context, prompt, choices);
 }
 
@@ -204,6 +204,6 @@ export function finishGame(commit: Commit) {
     dialog: {
       speaker: 'game',
       text: 'The game script has finished',
-    }
+    },
   });
 }

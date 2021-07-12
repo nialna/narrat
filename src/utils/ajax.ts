@@ -1,11 +1,10 @@
 export function getFile(url: string): Promise<string> {
   return new Promise((resolve, reject) => {
     // Set up our HTTP request
-    var xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
 
     // Setup our listener to process completed requests
     xhr.onload = function () {
-    
       // Process our return data
       if (xhr.status >= 200 && xhr.status < 300) {
         // This will run when the request is successful
@@ -17,5 +16,5 @@ export function getFile(url: string): Promise<string> {
     };
     xhr.open('GET', url);
     xhr.send();
-  })
+  });
 }

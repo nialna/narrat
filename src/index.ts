@@ -1,6 +1,6 @@
-import 'es6-promise/auto'
+import 'es6-promise/auto';
 import './/sass/main.css';
-import { App, createApp, State } from 'vue';
+import { createApp, State } from 'vue';
 import GameApp from './app.vue';
 import { setupStore } from './store';
 import './lib';
@@ -9,7 +9,6 @@ import { images } from './utils/images-loader';
 import { Store } from 'vuex';
 import { getConfig } from './config';
 import { aabb, screenToCanvas } from './utils/helpers';
-import { parseRenpyScript } from './renpy/renpy-parser';
 import { MachineStack } from './types/vuex';
 import { debounce } from './utils/debounce';
 
@@ -20,7 +19,7 @@ export interface AppOptions {
 
 let app: any;
 let store: Store<State>;
-let mousePos = {
+const mousePos = {
   x: 0,
   y: 0,
 };
@@ -45,7 +44,7 @@ export function startApp(config: GameConfig, options: AppOptions) {
       app,
       state: store.state,
     };
-    (window as any).narrat = narrat
+    (window as any).narrat = narrat;
   }
   // Hot Module Replacement (HMR) - Remove this snippet to remove HMR.
   // Learn more: https://www.snowpack.dev/concepts/hot-module-replacement
@@ -82,7 +81,18 @@ function gameLoop() {
             const button = getConfig().buttons[buttonName];
             const image = images[button.background];
             ctx.drawImage(image, button.position.left, button.position.top);
-            if (aabb(scaledMousePos.x, scaledMousePos.y, 1, 1, button.position.left, button.position.top, button.position.width, button.position.height)) {
+            if (
+              aabb(
+                scaledMousePos.x,
+                scaledMousePos.y,
+                1,
+                1,
+                button.position.left,
+                button.position.top,
+                button.position.width,
+                button.position.height,
+              )
+            ) {
               foundCollision = true;
             }
           }
@@ -111,7 +121,18 @@ function mouseclick(e: MouseEvent) {
     for (const buttonName of screen.buttons) {
       if (store.state.buttons[buttonName].enabled) {
         const button = getConfig().buttons[buttonName];
-        if (aabb(scaledMousePos.x, scaledMousePos.y, 1, 1, button.position.left, button.position.top, button.position.width, button.position.height)) {
+        if (
+          aabb(
+            scaledMousePos.x,
+            scaledMousePos.y,
+            1,
+            1,
+            button.position.left,
+            button.position.top,
+            button.position.width,
+            button.position.height,
+          )
+        ) {
           // clicked button
           const scriptToRun = button.action;
           const newStack: MachineStack = {
