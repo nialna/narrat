@@ -1,5 +1,6 @@
 // vuex.d.ts
-import { ComponentCustomProperties } from 'vue'
+// eslint-disable-next-line no-unused-vars
+import { ComponentCustomProperties } from 'vue';
 import { Store } from 'vuex';
 
 export type DialogCallback = (choice: number) => void;
@@ -40,7 +41,6 @@ export interface SkillCheckState {
   available: boolean;
 }
 declare module '@vue/runtime-core' {
-
   // declare your own store states
   interface State {
     machine: {
@@ -64,7 +64,7 @@ declare module '@vue/runtime-core' {
       currentMusic?: string;
     };
   }
-  
+
   interface ButtonsState {
     [key: string]: {
       enabled: boolean;
@@ -80,7 +80,8 @@ declare module '@vue/runtime-core' {
     leftOffset: number;
   }
   // provide typings for `this.$store`
+  // eslint-disable-next-line no-unused-vars
   interface ComponentCustomProperties {
-    $store: Store<State>
+    $store: Store<State>;
   }
 }

@@ -1,6 +1,5 @@
-import { ButtonsState } from "vue";
-import { ButtonConfig } from "./config";
-import { DataState, DialogKey, SkillCheckState, SkillsState } from "./vuex";
+import { ButtonsState } from 'vue';
+import { DataState, DialogKey, SkillCheckState, SkillsState } from './vuex';
 
 export interface GameSave {
   data: DataState;

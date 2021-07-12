@@ -1,10 +1,9 @@
 // store.ts
-import { InjectionKey } from 'vue'
-import { createLogger, createStore, Store } from 'vuex'
-import { State } from 'vue';
+import { InjectionKey, State } from 'vue';
+import { createLogger, createStore, Store } from 'vuex';
 import { nextLine, playerAnswered, runLine } from './vm/renpy-vm';
-import { DialogCallback, DialogKey, MachineStack } from './types/vuex';
-import { findDataHelper, setDataHelper } from './utils/data-helpers';
+import { DialogKey, MachineStack } from './types/vuex';
+import { setDataHelper } from './utils/data-helpers';
 import { getFile } from './utils/ajax';
 import { parseRenpyScript } from './renpy/renpy-parser';
 import { ButtonConfig, Config, SkillData } from './types/config';
@@ -29,7 +28,7 @@ export function setupStore(options: AppOptions): SetupStoreResult {
     plugins.push(createLogger());
   }
   // define injection key
-  const key: InjectionKey<Store<State>> = Symbol()
+  const key: InjectionKey<Store<State>> = Symbol('Store Injection Key');
 
   const store = createStore<State>({
     state: {
@@ -61,21 +60,21 @@ export function setupStore(options: AppOptions): SetupStoreResult {
       audio: {},
     },
     getters: {
-      machineHead (state): MachineStack {
+      machineHead(state): MachineStack {
         return state.machine.stack[state.machine.stack.length - 1];
       },
-      currentLine (state, getters): Parser.Command {
+      currentLine(state, getters): Parser.Command {
         const machineHead = getters.machineHead;
         return machineHead.branch[machineHead.currentIndex];
       },
-      command (state, getters): Parser.Command {
+      command(state, getters): Parser.Command {
         const machineHead = getters.machineHead;
         return machineHead.branch[machineHead.currentIndex];
       },
     },
     actions: {
-      async startMachine ({ commit }, payload: { scriptPaths: string[], config: Config }) {
-        const { scriptPaths, config } = payload;
+      async startMachine({ commit }, payload: { scriptPaths: string[]; config: Config }) {
+        const { scriptPaths } = payload;
         const filePromises: Array<Promise<string>> = [];
         for (const path of scriptPaths) {
           filePromises.push(getFile(path));
@@ -84,10 +83,11 @@ export function setupStore(options: AppOptions): SetupStoreResult {
         const start = Date.now();
         let scripts: Parser.ParsedScript = {};
         for (const index in files) {
-          const file = files[index]
-          scripts = { ...scripts, ...parseRenpyScript(file, {
-            fileName: scriptPaths[index],
-          }) };
+          const file = files[index];
+          scripts = {
+            ...scripts,
+            ...parseRenpyScript(file, scriptPaths[index]),
+          };
         }
         const end = Date.now();
         console.log(`script parsed in ${end - start} ms`);
@@ -95,23 +95,25 @@ export function setupStore(options: AppOptions): SetupStoreResult {
         commit('setScript', scripts);
         commit('setupSkills', payload.config.skills);
       },
-      runLabel ({ state, commit }, label) {
+      runLabel({ state, commit }, label) {
         const branch = state.machine.script[label];
         if (!branch) {
           console.error(`Label ${branch} doesn't exist`);
         }
         commit('setLastLabel', label);
-        state.machine.stack = [{
-          currentIndex: 0,
-          branch,
-        }];
+        state.machine.stack = [
+          {
+            currentIndex: 0,
+            branch,
+          },
+        ];
         this.dispatch('runLine');
       },
-      async runLine (context) {
-        await this.dispatch('saveGame')
+      async runLine(context) {
+        await this.dispatch('saveGame');
         await runLine(context);
       },
-      nextLine (context) {
+      nextLine(context) {
         return nextLine(context);
       },
       playerAnswered(context, index) {
@@ -134,10 +136,10 @@ export function setupStore(options: AppOptions): SetupStoreResult {
           commit('setLoadedData', save);
           dispatch('runLabel', save.lastLabel);
         }
-      }
+      },
     },
     mutations: {
-      setLoadedData (state, save: GameSave) {
+      setLoadedData(state, save: GameSave) {
         state.machine.data = save.data;
         state.skills = save.skills;
         state.dialog = save.dialog;
@@ -145,17 +147,17 @@ export function setupStore(options: AppOptions): SetupStoreResult {
         state.lastLabel = save.lastLabel;
         state.skillChecks = save.skillChecks;
       },
-      reset (state) {
+      reset(state) {
         state.ready = false;
         state.machine.stack = [];
         state.machine.script = {};
         state.machine.data = {};
         state.dialog = [];
       },
-      setLastLabel (state, label) {
+      setLastLabel(state, label) {
         state.lastLabel = label;
       },
-      setupSkillCheck (state, { skillCheck, skillCheckId }){
+      setupSkillCheck(state, { skillCheck, skillCheckId }) {
         state.skillChecks[skillCheckId] = skillCheck;
       },
       passSkillCheck(state, skillCheckId) {
@@ -165,7 +167,7 @@ export function setupStore(options: AppOptions): SetupStoreResult {
         state.skillChecks[skillCheckId].passed = false;
         state.skillChecks[skillCheckId].available = false;
       },
-      setScript (state, script) {
+      setScript(state, script) {
         state.machine.script = script;
         state.machine.stack.push({
           currentIndex: 0,
@@ -173,72 +175,72 @@ export function setupStore(options: AppOptions): SetupStoreResult {
         });
         state.ready = true;
       },
-      setupSkills (state, skills: { [key: string]: SkillData }) {
+      setupSkills(state, skills: { [key: string]: SkillData }) {
         for (const skill in skills) {
           state.skills[skill] = {
             level: 1,
           };
         }
       },
-      incrementSkill (state, { skill, amount }: { skill: string, amount: number }) {
+      incrementSkill(state, { skill, amount }: { skill: string; amount: number }) {
         state.skills[skill].level += amount;
       },
-      addDialog (state, payload: { dialog: DialogKey }) {
+      addDialog(state, payload: { dialog: DialogKey }) {
         state.dialog.push(payload.dialog);
       },
-      nextLine (state) {
+      nextLine(state) {
         state.machine.stack[state.machine.stack.length - 1].currentIndex += 1;
       },
-      previousStack (state) {
+      previousStack(state) {
         state.machine.stack.splice(state.machine.stack.length - 1);
       },
-      addStack (state, newStack) {
+      addStack(state, newStack) {
         state.machine.stack.push(newStack);
       },
-      setStack (state, newStack) {
+      setStack(state, newStack) {
         state.machine.stack = [];
         state.machine.stack.push(newStack);
       },
-      setData (state, { path, value }: { path: string, value: any }) {
+      setData(state, { path, value }: { path: string; value: any }) {
         setDataHelper(state.machine.data, path, value);
       },
-      startPlaying (state) {
+      startPlaying(state) {
         state.playing = true;
       },
-      setScreen (state, screen) {
+      setScreen(state, screen) {
         state.currentScreen = screen;
       },
-      setButtons (state, buttons: { [key: string]: ButtonConfig }) {
+      setButtons(state, buttons: { [key: string]: ButtonConfig }) {
         for (const i in buttons) {
           state.buttons[i] = {
             enabled: buttons[i].enabled,
           };
         }
       },
-      clearDialog (state) {
+      clearDialog(state) {
         state.dialog.splice(0);
       },
-      changeButton (state, payload: { button: string, enabled: boolean }) {
+      changeButton(state, payload: { button: string; enabled: boolean }) {
         state.buttons[payload.button].enabled = payload.enabled;
       },
-      updateScreenSize(state, { width, height }: {width: number, height: number}) {
+      updateScreenSize(state, { width, height }: { width: number; height: number }) {
         state.rendering.screenHeight = height;
         state.rendering.screenWidth = width;
         const config = getConfig().layout;
         const gameWidth = config.backgrounds.width;
-        const gameHeight = config.backgrounds.height
+        const gameHeight = config.backgrounds.height;
         const screenWidth = width - config.minTextWidth;
         const screenHeight = height;
         const ratio = aspectRatioFit(screenWidth, screenHeight, gameWidth, gameHeight);
         state.rendering.renderRatio = ratio;
-        const renderHeight = state.rendering.canvasHeight = gameHeight * ratio;
-        const renderWidth = state.rendering.canvasWidth = gameWidth * ratio;
+        const renderHeight = (state.rendering.canvasHeight = gameHeight * ratio);
+        const renderWidth = (state.rendering.canvasWidth = gameWidth * ratio);
         state.rendering.topOffset = (screenHeight - renderHeight) / 2;
         state.rendering.leftOffset = (screenWidth - renderWidth) / 2;
       },
       setMusic(state, music) {
-        state.audio.currentMusic = music
-      }
+        state.audio.currentMusic = music;
+      },
     },
     plugins,
   });
@@ -246,8 +248,4 @@ export function setupStore(options: AppOptions): SetupStoreResult {
     store,
     key,
   };
-}
-
-function findDataKey(state: State, path: string) {
-  return findDataHelper(state.machine.data, path);
 }

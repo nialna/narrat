@@ -4,11 +4,11 @@ import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import vuePlugin from 'rollup-plugin-vue'
 import typescript from 'rollup-plugin-typescript2' 
-import packageJson from "./package.json";
 import postcss from 'rollup-plugin-postcss';
 import paths from 'rollup-plugin-paths';
 import analyze from 'rollup-plugin-analyzer';
 import versionInjector from 'rollup-plugin-version-injector';
+import packageJson from "./package.json";
 
 export default {
   input: 'src/index.ts',

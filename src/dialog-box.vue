@@ -1,31 +1,49 @@
 <template>
   <div class="dialog-box w-full override" :style="dialogBoxStyle">
     <div class="dialog-content">
-      <span class="dialog-title override" v-if="options.title" :style="titleStyle">{{ options.title }}</span>
-      <span class="dialog-text dialog-separator override" :style="textStyle" v-html="preText"></span>
-      <span class="dialog-text override" :style="textStyle">{{ options.text }}</span>
+      <span
+        class="dialog-title override"
+        v-if="options.title"
+        :style="titleStyle"
+        >{{ options.title }}</span
+      >
+      <span
+        class="dialog-text dialog-separator override"
+        :style="textStyle"
+        v-html="preText"
+      ></span>
+      <span class="dialog-text override" :style="textStyle">{{
+        options.text
+      }}</span>
       <div class="dialog-choices" v-if="canInteract && choices">
-        <p v-for="(choice, index) in choices" :key="index" :style="dialogStyle(choice)"
-        v-on:click="chooseOption(choice)" class="dialog-choice override">
-          {{index + 1}}. –&nbsp; {{ choice.choice }}
+        <p
+          v-for="(choice, index) in choices"
+          :key="index"
+          :style="dialogStyle(choice)"
+          v-on:click="chooseOption(choice)"
+          class="dialog-choice override"
+        >
+          {{ index + 1 }}. –&nbsp; {{ choice.choice }}
         </p>
       </div>
       <div v-else-if="canInteract" class="buttons-container">
-        <div v-on:click="chooseOption(0)" class="interact-button override">Continue</div>
+        <div v-on:click="chooseOption(0)" class="interact-button override">
+          Continue
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import { DialogStyle } from './types/character-types';
-import { DialogBoxParameters } from './types/dialog-box-types'
-import { DialogCallback, DialogChoice } from './types/vuex';
-import { getCharacterStyle } from './utils/characters';
+import { defineComponent, PropType } from "vue";
+import { DialogStyle } from "./types/character-types";
+import { DialogBoxParameters } from "./types/dialog-box-types";
+import { DialogCallback, DialogChoice } from "./types/vuex";
+import { getCharacterStyle } from "./utils/characters";
 
 export default defineComponent({
-  data () {
+  data() {
     return {
       passed: false,
     };
@@ -37,10 +55,10 @@ export default defineComponent({
   },
 
   mounted() {
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener("keydown", (e) => {
       if (this.canInteract) {
         let choice = -1;
-        if (e.key === ' ') {
+        if (e.key === " ") {
           if (this.choices) {
             choice = 0;
           } else {
@@ -48,22 +66,22 @@ export default defineComponent({
           }
         } else {
           switch (e.key) {
-            case ' ':
+            case " ":
               choice = 0;
               break;
-            case '1':
+            case "1":
               choice = 0;
               break;
-            case '2':
+            case "2":
               choice = 1;
               break;
-            case '3':
+            case "3":
               choice = 2;
               break;
-            case '4':
+            case "4":
               choice = 3;
               break;
-            case '5':
+            case "5":
               choice = 4;
               break;
           }
@@ -77,21 +95,21 @@ export default defineComponent({
   computed: {
     preText(): string {
       if (this.options!.title) {
-        return ' &nbsp;–&nbsp; ';
+        return " &nbsp;–&nbsp; ";
       } else {
-        return '';
+        return "";
       }
     },
     style(): DialogStyle {
       return getCharacterStyle(this.options!.styleId);
     },
-    dialogBoxStyle (): any {
+    dialogBoxStyle(): any {
       const style = getCharacterStyle(this.options!.styleId);
       let css: any = {
-        opacity: this.options!.old ? '0.5' : '1',
+        opacity: this.options!.old ? "0.5" : "1",
       };
       if (!this.options!.title) {
-        css.marginTop = '-20px';
+        css.marginTop = "-20px";
       }
       return { ...style.boxCss, ...css };
     },
@@ -104,8 +122,8 @@ export default defineComponent({
       const style = getCharacterStyle(this.options!.styleId);
       return style.textCss;
     },
-    choices (): DialogChoice[] | undefined {
-    if (this.options!.choices) {
+    choices(): DialogChoice[] | undefined {
+      if (this.options!.choices) {
         return this.options!.choices;
       }
     },
@@ -115,25 +133,23 @@ export default defineComponent({
   },
 
   methods: {
-    chooseOption (choice: DialogChoice) {
+    chooseOption(choice: DialogChoice) {
       this.passed = true;
-      this.$store.dispatch('playerAnswered', choice.originalIndex);
+      this.$store.dispatch("playerAnswered", choice.originalIndex);
     },
-    dialogStyle (choice: DialogChoice) {
+    dialogStyle(choice: DialogChoice) {
       const style: any = {};
       if (!choice.allowed) {
-        style.pointerEvents = 'none';
-        style.textDecoration = 'line-through';
+        style.pointerEvents = "none";
+        style.textDecoration = "line-through";
       }
       return style;
-    }
-  }
-})
-
+    },
+  },
+});
 </script>
 
 <style>
-
 .dialog-title {
   font-size: 18px;
   font-weight: bold;
@@ -151,7 +167,6 @@ export default defineComponent({
   padding: 10px;
   padding-left: 2em;
   margin-bottom: 10px;
-  
 }
 
 .dialog-choice {
@@ -171,7 +186,6 @@ export default defineComponent({
   align-items: stretch;
   box-sizing: border-box;
 }
-
 
 .interact-button {
   height: 50px;

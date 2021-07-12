@@ -1,7 +1,7 @@
 export function findDataHelper<T>(sourceObj: any, path: string): [T, string] {
   const keys = path.split('.');
   let obj = sourceObj;
-  let end = keys.length - 1;
+  const end = keys.length - 1;
   let key = keys[0];
   let i = 0;
   for (i = 0; i < end; i++) {
