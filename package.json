@@ -13,8 +13,7 @@
     "version": "npm run build",
     "build": "NODE_ENV=production rollup -c",
     "lint": "eslint src --ext=.js,.jsx,.ts,.tsx",
-    "postversion": "git push && git push --tags",
-    "ci": "npm run lint"
+    "postversion": "git push && git push --tags"
   },
   "keywords": [
     "game"
